@@ -27,7 +27,7 @@ public class NodeConverterIT extends BaseIntegrationTest {
 
     @Test
     public void supportForAllWineryNodeTypes() throws UnknownNodeTypeException {
-        NodeConverter converter = new NodeConverter();
+        NodeConverter converter = new NodeConverter(logger);
         Set<String> wineryNodeTypes = getWineryNodeTypes();
         for (String nodeType : wineryNodeTypes) {
             logger.info("Testing conversion of type '{}'", nodeType);

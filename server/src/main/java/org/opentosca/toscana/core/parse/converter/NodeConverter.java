@@ -5,6 +5,9 @@ import java.util.Map;
 import java.util.Set;
 import java.util.function.BiFunction;
 
+import org.opentosca.toscana.model.capability.ContainerCapability;
+import org.opentosca.toscana.model.requirement.HostRequirement;
+import org.opentosca.toscana.model.requirement.Requirement;
 import org.opentosca.toscana.model.node.Apache;
 import org.opentosca.toscana.model.node.BlockStorage;
 import org.opentosca.toscana.model.node.Compute;
@@ -22,20 +25,24 @@ import org.opentosca.toscana.model.node.SoftwareComponent;
 import org.opentosca.toscana.model.node.WebApplication;
 import org.opentosca.toscana.model.node.WebServer;
 import org.opentosca.toscana.model.node.WordPress;
+import org.opentosca.toscana.model.relation.HostedOn;
 
 import com.google.common.collect.Sets;
 import org.eclipse.winery.model.tosca.yaml.TNodeTemplate;
+import org.slf4j.Logger;
 
 /**
  Contains logic to convert TOSCA node templates into nodes of the EffectiveModel
  */
 class NodeConverter {
 
+    private final Logger logger;
     static final String TOSCA_PREFIX = "tosca.nodes.";
 
     private Map<String, BiFunction<String, TNodeTemplate, RootNode>> conversionMap = new HashMap<>();
 
-    NodeConverter() {
+    NodeConverter(Logger logger) {
+        this.logger = logger;
         addRule("Compute", this::toCompute);
         addRule("Container.Application", this::toContainerApplication);
         addRule("Container.Runtime", this::toContainerRuntime);
@@ -57,6 +64,7 @@ class NodeConverter {
 
     /**
      Establishes a correlation between a node type (string) and its construction method.
+
      @param simpleType the shorthand type of a node (e.g.: "Compute")
      @param conversion the conversion method which is used to construct an (EffectiveModel) node
      */
@@ -66,6 +74,7 @@ class NodeConverter {
 
     /**
      Overloading {@link #addRule}
+
      @param simpleType {@link #addRule}
      @param typePrefix the prefix needed to construct the full type name: {@code tosca.nodes.<typePrefix>.<simpleType>}
      @param conversion {@link #addRule}
@@ -82,6 +91,7 @@ class NodeConverter {
 
     RootNode convert(String name, TNodeTemplate template) throws UnknownNodeTypeException {
         String nodeType = template.getType().getLocalPart();
+        logger.debug("> Convert node template '{}' (type: '{}')", name, nodeType);
         BiFunction<String, TNodeTemplate, RootNode> conversion = conversionMap.get(nodeType);
         if (conversion == null) {
             throw new UnknownNodeTypeException(String.format(
@@ -145,7 +155,11 @@ class NodeConverter {
     }
 
     private SoftwareComponent toSoftwareComponent(String name, TNodeTemplate template) {
-        throw new UnsupportedOperationException();
+        
+//        HostRequirement host = HostRequirement.builder();
+//            Requirement.<ContainerCapability, Compute, HostedOn>builder(host).build();
+//        SoftwareComponent softwareComponent = SoftwareComponent.builder(name, );
+        return null;
     }
 
     private WebApplication toWebApplication(String name, TNodeTemplate template) {

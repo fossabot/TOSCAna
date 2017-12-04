@@ -25,6 +25,7 @@ public class ModelConverter {
     }
 
     public EffectiveModel convert(TServiceTemplate serviceTemplate) throws UnknownNodeTypeException {
+        logger.debug("Convert service template to resulting model");
         Set<RootNode> nodes = convertNodeTemplates(serviceTemplate.getTopologyTemplate());
         return new EffectiveModel(nodes);
     }
@@ -39,7 +40,7 @@ public class ModelConverter {
         }
 
         Set<RootNode> nodes = new HashSet<>();
-        NodeConverter nodeConverter = new NodeConverter();
+        NodeConverter nodeConverter = new NodeConverter(logger);
         for (Map.Entry<String, TNodeTemplate> entry : templateMap.entrySet()) {
             RootNode node = nodeConverter.convert(entry.getKey(), entry.getValue());
             nodes.add(node);
