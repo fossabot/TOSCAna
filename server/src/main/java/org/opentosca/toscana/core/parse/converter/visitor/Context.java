@@ -17,7 +17,7 @@ public class Context<NodeBuilderT extends DescribableEntityBuilder> extends Abst
 
     @Override
     public Context copy() {
-        return new Context(nodeName, (NodeBuilderT) SerializationUtils.clone(nodeBuilder));
+        return this;
     }
 
     @Override
