@@ -8,17 +8,27 @@ import org.opentosca.toscana.model.node.SoftwareComponent.SoftwareComponentBuild
 
 import org.eclipse.winery.model.tosca.yaml.TPropertyAssignment;
 
-public class SoftwareComponentVisitor extends DescribableVisitor<SoftwareComponent, SoftwareComponentBuilder> {
+public class SoftwareComponentVisitor<NodeT extends SoftwareComponent, BuilderT extends SoftwareComponentBuilder> extends RootNodeVisitor<NodeT, BuilderT> {
 
     private static final String ADMIN_CREDENTIAL = "admin_credential";
+    private static final String COMPONENT_VERSION = "component_version";
 
     @Override
-    public ConversionResult<SoftwareComponent> visit(TPropertyAssignment node, Context<SoftwareComponentBuilder> parameter) {
-        if (parameter.getKey() == ADMIN_CREDENTIAL) {
-            Map<String, String> credentialMap = (Map<String, String>) node.getValue();
-            Credential credential = Credential.builder(credentialMap.get(ADMIN_CREDENTIAL)).build();
-            parameter.getNodeBuilder().adminCredential(credential);
+    public ConversionResult<NodeT> visit(TPropertyAssignment node, Context<BuilderT> parameter) {
+        BuilderT builder = parameter.getNodeBuilder();
+        switch (parameter.getKey()) {
+            case ADMIN_CREDENTIAL:
+                // TODO build sophisticated credential visitor
+                Map<String, String> credentialMap = (Map<String, String>) node.getValue();
+                Credential credential = Credential.builder(credentialMap.get("token")).build();
+                parameter.getNodeBuilder().adminCredential(credential);
+                break;
+            case COMPONENT_VERSION:
+                break;
+            default:
+                super.visit(node, parameter);
         }
+       
         return null;
     }
 }

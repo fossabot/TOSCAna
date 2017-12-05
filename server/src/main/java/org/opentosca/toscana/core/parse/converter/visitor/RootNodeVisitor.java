@@ -1,27 +1,15 @@
 package org.opentosca.toscana.core.parse.converter.visitor;
 
-import java.util.Map;
-
-import org.opentosca.toscana.model.DescribableEntity;
-import org.opentosca.toscana.model.DescribableEntity.DescribableEntityBuilder;
-import org.opentosca.toscana.model.datatype.Credential;
 import org.opentosca.toscana.model.node.RootNode;
-import org.opentosca.toscana.model.node.SoftwareComponent;
-import org.opentosca.toscana.model.node.SoftwareComponent.SoftwareComponentBuilder;
 
-import org.eclipse.winery.model.tosca.yaml.TPropertyAssignment;
+import org.eclipse.winery.model.tosca.yaml.TNodeTemplate;
 
-public class RootNodeVisitor extends DescribableVisitor<RootNode, DescribableEntityBuilder> {
-
-    private static final String ADMIN_CREDENTIAL = "admin_credential";
-
+public class RootNodeVisitor<NodeT extends RootNode, BuilderT extends RootNode.RootNodeBuilder> extends DescribableVisitor<NodeT, BuilderT> {
+    
     @Override
-    public ConversionResult<SoftwareComponent> visit(TPropertyAssignment node, Context<SoftwareComponentBuilder> parameter) {
-        if (parameter.getKey() == ADMIN_CREDENTIAL) {
-            Map<String, String> credentialMap = (Map<String, String>) node.getValue();
-            Credential credential = Credential.builder(credentialMap.get(ADMIN_CREDENTIAL)).build();
-            parameter.getNodeBuilder().adminCredential(credential);
-        }
-        return null;
+    public ConversionResult<NodeT> visit(TNodeTemplate node, Context<BuilderT> parameter) {
+        BuilderT builder = parameter.getNodeBuilder();
+        builder.nodeName(parameter.getNodeName());
+        return super.visit(node, parameter);
     }
 }

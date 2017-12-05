@@ -7,17 +7,17 @@ import org.eclipse.winery.model.tosca.yaml.visitor.AbstractParameter;
 
 public class Context<NodeBuilderT extends DescribableEntityBuilder> extends AbstractParameter<Context<NodeBuilderT>> {
 
-    private final String name;
+    private final String nodeName;
     private final NodeBuilderT nodeBuilder;
 
     public Context(String name, NodeBuilderT node) {
-        this.name = name;
+        this.nodeName = name;
         this.nodeBuilder = node;
     }
 
     @Override
     public Context copy() {
-        return new Context(name, (NodeBuilderT) SerializationUtils.clone(nodeBuilder));
+        return new Context(nodeName, (NodeBuilderT) SerializationUtils.clone(nodeBuilder));
     }
 
     @Override
@@ -25,8 +25,8 @@ public class Context<NodeBuilderT extends DescribableEntityBuilder> extends Abst
         return this;
     }
 
-    public String getName() {
-        return name;
+    public String getNodeName() {
+        return nodeName;
     }
 
     public NodeBuilderT getNodeBuilder() {
