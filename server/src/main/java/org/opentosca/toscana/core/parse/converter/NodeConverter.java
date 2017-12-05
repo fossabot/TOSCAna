@@ -7,8 +7,10 @@ import java.util.function.BiFunction;
 
 import org.opentosca.toscana.core.parse.converter.visitor.Context;
 import org.opentosca.toscana.core.parse.converter.visitor.ConversionResult;
+import org.opentosca.toscana.core.parse.converter.visitor.DescribableVisitor;
 import org.opentosca.toscana.core.parse.converter.visitor.SoftwareComponentVisitor;
-import org.opentosca.toscana.model.capability.ContainerCapability;
+import org.opentosca.toscana.model.DescribableEntity;
+import org.opentosca.toscana.model.DescribableEntity.DescribableEntityBuilder;
 import org.opentosca.toscana.model.node.Apache;
 import org.opentosca.toscana.model.node.BlockStorage;
 import org.opentosca.toscana.model.node.Compute;
@@ -27,8 +29,6 @@ import org.opentosca.toscana.model.node.SoftwareComponent.SoftwareComponentBuild
 import org.opentosca.toscana.model.node.WebApplication;
 import org.opentosca.toscana.model.node.WebServer;
 import org.opentosca.toscana.model.node.WordPress;
-import org.opentosca.toscana.model.relation.HostedOn;
-import org.opentosca.toscana.model.requirement.HostRequirement;
 
 import com.google.common.collect.Sets;
 import org.eclipse.winery.model.tosca.yaml.TNodeTemplate;
@@ -109,6 +109,14 @@ class NodeConverter {
         }
     }
 
+    private <NodeT extends DescribableEntity, BuilderT extends DescribableEntityBuilder> NodeT toNode(
+        String name, TNodeTemplate template, Class<NodeT> nodeType,
+        Class<BuilderT> builderType, DescribableVisitor visitor) {
+        Context<BuilderT> context = new Context<>(name, BuilderUtil.newInstance(nodeType));
+        ConversionResult<NodeT> result = visitor.visit(template, context);
+        return result.getNode();
+    }
+
     private Apache toApache(String name, TNodeTemplate template) {
         throw new UnsupportedOperationException();
     }
@@ -158,9 +166,8 @@ class NodeConverter {
     }
 
     private SoftwareComponent toSoftwareComponent(String name, TNodeTemplate template) {
-        Context<SoftwareComponentBuilder> context = new Context<>(name, BuilderUtil.newInstance(SoftwareComponentBuilder.class));
-        ConversionResult<SoftwareComponent> result = new SoftwareComponentVisitor().visit(template, context);
-        return result.getNode();
+        return toNode(name, template, SoftwareComponent.class,
+            SoftwareComponentBuilder.class, new SoftwareComponentVisitor());
     }
 
     private WebApplication toWebApplication(String name, TNodeTemplate template) {
