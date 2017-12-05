@@ -47,7 +47,7 @@ public class SoftwareComponent extends RootNode {
         this.adminCredential = adminCredential;
         this.host = (host == null) ? HostRequirement.builder().build() : host;
 
-        requirements.add(host);
+        requirements.add(this.host);
     }
 
     /**

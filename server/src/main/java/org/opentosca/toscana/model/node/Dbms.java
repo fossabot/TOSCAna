@@ -48,7 +48,7 @@ public class Dbms extends SoftwareComponent {
         this.port = port;
         this.rootPassword = rootPassword;
 
-        capabilities.add(containerHost);
+        capabilities.add(this.containerHost);
     }
 
     /**

@@ -85,7 +85,7 @@ public class Database extends RootNode {
         this.host = null;
         this.databaseEndpoint = Objects.requireNonNull(databaseEndpoint);
 
-        capabilities.add(databaseEndpoint);
+        capabilities.add(this.databaseEndpoint);
     }
 
     /**

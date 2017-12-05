@@ -76,7 +76,7 @@ public class BlockStorage extends RootNode {
         this.snapshotId = snapshotId;
         this.attachment = Objects.requireNonNull(attachment);
 
-        capabilities.add(attachment);
+        capabilities.add(this.attachment);
     }
 
 

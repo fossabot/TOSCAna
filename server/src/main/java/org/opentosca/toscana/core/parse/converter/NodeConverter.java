@@ -1,5 +1,6 @@
 package org.opentosca.toscana.core.parse.converter;
 
+import java.lang.reflect.Constructor;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -33,6 +34,7 @@ import org.opentosca.toscana.model.node.WordPress;
 import com.google.common.collect.Sets;
 import org.eclipse.winery.model.tosca.yaml.TNodeTemplate;
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  Contains logic to convert TOSCA node templates into nodes of the EffectiveModel
@@ -40,7 +42,7 @@ import org.slf4j.Logger;
 class NodeConverter {
 
     static final String TOSCA_PREFIX = "tosca.nodes.";
-    private final Logger logger;
+    private static Logger logger = LoggerFactory.getLogger(NodeConverter.class);
 
     private Map<String, BiFunction<String, TNodeTemplate, RootNode>> conversionMap = new HashMap<>();
 
@@ -110,11 +112,21 @@ class NodeConverter {
     }
 
     private <NodeT extends DescribableEntity, BuilderT extends DescribableEntityBuilder> NodeT toNode(
-        String name, TNodeTemplate template, Class<NodeT> nodeType,
-        Class<BuilderT> builderType, DescribableVisitor visitor) {
-        Context<BuilderT> context = new Context<>(name, BuilderUtil.newInstance(nodeType));
+        String name, TNodeTemplate template, Class<BuilderT> builderType, DescribableVisitor visitor) {
+        Context<BuilderT> context = new Context<>(name, newInstance(builderType));
         ConversionResult<NodeT> result = visitor.visit(template, context);
         return result.getNode();
+    }
+
+    static <NodeT> NodeT newInstance(Class clazz) {
+        try {
+            Constructor<NodeT> constructor = clazz.getDeclaredConstructor();
+            constructor.setAccessible(true);
+            return constructor.newInstance();
+        } catch (Exception e) {
+            logger.error("Failed to retrieve builder via reflection");
+            return null;
+        }
     }
 
     private Apache toApache(String name, TNodeTemplate template) {
@@ -166,8 +178,7 @@ class NodeConverter {
     }
 
     private SoftwareComponent toSoftwareComponent(String name, TNodeTemplate template) {
-        return toNode(name, template, SoftwareComponent.class,
-            SoftwareComponentBuilder.class, new SoftwareComponentVisitor());
+        return toNode(name, template, SoftwareComponentBuilder.class, new SoftwareComponentVisitor());
     }
 
     private WebApplication toWebApplication(String name, TNodeTemplate template) {

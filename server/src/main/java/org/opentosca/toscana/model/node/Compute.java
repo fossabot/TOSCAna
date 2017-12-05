@@ -87,12 +87,12 @@ public class Compute extends RootNode {
         this.binding = (binding == null) ? BindableCapability.builder().build() : binding;
         this.localStorage = Objects.requireNonNull(localStorage);
 
-        capabilities.add(host);
-        capabilities.add(os);
-        capabilities.add(adminEndpoint);
-        capabilities.add(scalable);
-        capabilities.add(binding);
-        requirements.add(localStorage);
+        capabilities.add(this.host);
+        capabilities.add(this.os);
+        capabilities.add(this.adminEndpoint);
+        capabilities.add(this.scalable);
+        capabilities.add(this.binding);
+        requirements.add(this.localStorage);
     }
 
     /**

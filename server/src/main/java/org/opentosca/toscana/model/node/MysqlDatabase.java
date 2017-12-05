@@ -30,7 +30,7 @@ public class MysqlDatabase extends Database {
         
         this.host = (host == null) ? MysqlDbmsRequirement.builder().build() : host;
 
-        requirements.add(host);
+        requirements.add(this.host);
     }
 
     /**

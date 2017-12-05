@@ -60,8 +60,8 @@ public class ContainerApplication extends RootNode {
         this.storage = Objects.requireNonNull(storage);
         this.network = Objects.requireNonNull(network);
 
-        requirements.add(storage);
-        requirements.add(network);
+        requirements.add(this.storage);
+        requirements.add(this.network);
     }
 
     /**

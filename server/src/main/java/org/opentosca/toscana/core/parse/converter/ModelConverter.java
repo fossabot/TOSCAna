@@ -25,7 +25,7 @@ public class ModelConverter {
     }
 
     public EffectiveModel convert(TServiceTemplate serviceTemplate) throws UnknownNodeTypeException {
-        logger.debug("Convert service template to resulting model");
+        logger.debug("Convert service template to normative model");
         Set<RootNode> nodes = convertNodeTemplates(serviceTemplate.getTopologyTemplate());
         return new EffectiveModel(nodes);
     }

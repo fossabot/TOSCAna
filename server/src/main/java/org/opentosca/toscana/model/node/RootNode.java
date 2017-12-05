@@ -54,8 +54,8 @@ public abstract class RootNode extends DescribableEntity implements VisitableNod
             throw new IllegalArgumentException("name must not be empty");
         }
         this.standardLifecycle = (standardLifecycle == null) ? StandardLifecycle.builder().build() : standardLifecycle;
-        capabilities.add(feature);
-        requirements.addAll(dependencies);
+        capabilities.add(this.feature);
+        requirements.addAll(this.dependencies);
     }
 
     /**

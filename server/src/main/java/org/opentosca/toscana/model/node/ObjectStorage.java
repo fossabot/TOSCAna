@@ -55,7 +55,7 @@ public class ObjectStorage extends RootNode {
         this.maxSizeInGB = maxSizeInGB;
         this.storageEndpoint = Objects.requireNonNull(storageEndpoint);
 
-        capabilities.add(storageEndpoint);
+        capabilities.add(this.storageEndpoint);
     }
 
     /**

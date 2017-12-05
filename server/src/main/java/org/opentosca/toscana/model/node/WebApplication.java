@@ -49,7 +49,7 @@ public class WebApplication extends RootNode {
                 containerCapability, HostedOn.builder().build()).build();
         }
 
-        capabilities.add(appEndpoint);
+        capabilities.add(this.appEndpoint);
         requirements.add(this.host);
     }
 

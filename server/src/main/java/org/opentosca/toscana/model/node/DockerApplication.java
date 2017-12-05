@@ -30,7 +30,7 @@ public class DockerApplication extends ContainerApplication {
         super(storage, network, nodeName, standardLifecycle, description);
         this.host = Objects.requireNonNull(host);
 
-        requirements.add(host);
+        requirements.add(this.host);
     }
 
     /**
