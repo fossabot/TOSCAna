@@ -80,10 +80,10 @@ public class Compute extends RootNode {
         super(nodeName, standardLifecycle, description);
         this.privateAddress = privateAddress;
         this.publicAddress = publicAddress;
-        this.host = Objects.requireNonNull(host);
         this.os = Objects.requireNonNull(os);
         this.adminEndpoint = Objects.requireNonNull(adminEndpoint);
-        this.scalable = Objects.requireNonNull(scalable);
+        this.host = (host == null) ? ContainerCapability.builder().build() : host;
+        this.scalable = (scalable == null) ? ScalableCapability.builder().build() : scalable;
         this.binding = (binding == null) ? BindableCapability.builder().build() : binding;
         this.localStorage = Objects.requireNonNull(localStorage);
 
@@ -98,19 +98,16 @@ public class Compute extends RootNode {
     /**
      @param nodeName      {@link #nodeName}
      @param adminEndpoint {@link #adminEndpoint}
-     @param scalable      {@link #scalable}
      @param localStorage  {@link #localStorage}
      */
     public static ComputeBuilder builder(String nodeName,
                                          OsCapability os,
                                          AdminEndpointCapability adminEndpoint,
-                                         ScalableCapability scalable,
                                          BlockStorageRequirement localStorage) {
         return new ComputeBuilder()
             .os(os)
             .nodeName(nodeName)
             .adminEndpoint(adminEndpoint)
-            .scalable(scalable)
             .localStorage(localStorage);
     }
 

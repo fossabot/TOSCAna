@@ -12,13 +12,17 @@ import lombok.Data;
 @Data
 public class HostedOn extends RootRelationship {
 
+    public HostedOn() {
+        super(null);
+    }
+   
     @Builder
     protected HostedOn(String description) {
         super(description);
     }
 
     public static HostedOn getFallback(HostedOn rel) {
-        return (rel == null) ? HostedOn.builder().build() : rel;
+        return (rel == null) ? new HostedOn() : rel;
     }
 
     @Override

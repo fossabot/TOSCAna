@@ -34,8 +34,8 @@ public class ContainerRuntime extends SoftwareComponent {
                              StandardLifecycle standardLifecycle,
                              String description) {
         super(componentVersion, adminCredential, host, nodeName, standardLifecycle, description);
-        this.containerHost = Objects.requireNonNull(containerHost);
-        this.scalable = Objects.requireNonNull(scalable);
+        this.containerHost = (containerHost == null) ? ContainerCapability.builder().build() : containerHost;
+        this.scalable = (scalable == null) ? ScalableCapability.builder().build() : scalable;
 
         capabilities.add(containerHost);
         capabilities.add(scalable);
@@ -43,16 +43,10 @@ public class ContainerRuntime extends SoftwareComponent {
 
     /**
      @param nodeName      {@link #nodeName}
-     @param containerHost {@link #containerHost}
-     @param scalable      {@link #scalable}
      */
-    public static ContainerRuntimeBuilder builder(String nodeName,
-                                                  ContainerCapability containerHost,
-                                                  ScalableCapability scalable) {
+    public static ContainerRuntimeBuilder builder(String nodeName) {
         return new ContainerRuntimeBuilder()
-            .nodeName(nodeName)
-            .scalable(scalable)
-            .containerHost(containerHost);
+            .nodeName(nodeName);
     }
 
     @Override

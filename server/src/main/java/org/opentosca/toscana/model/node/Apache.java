@@ -27,25 +27,22 @@ public class Apache extends WebServer {
                      String nodeName,
                      StandardLifecycle lifecycle,
                      String description) {
-        super(componentVersion, adminCredential, host, containerHost,
+        super(componentVersion, adminCredential, HostRequirement.getFallback(host), containerHost,
             databaseEndpoint, adminEndpoint, nodeName, lifecycle, description);
     }
 
     /**
      @param nodeName      {@link #nodeName}
-     @param host          {@link #host}
      @param containerHost {@link #containerHost}
      @param dataEndpoint  {@link #dataEndpoint}
      @param adminEndpoint {@link #adminEndpoint}
      */
     public static ApacheBuilder builder(String nodeName,
-                                        HostRequirement host,
                                         ContainerCapability containerHost,
                                         EndpointCapability dataEndpoint,
                                         AdminEndpointCapability adminEndpoint) {
         return (ApacheBuilder) new ApacheBuilder()
             .nodeName(nodeName)
-            .host(host)
             .containerHost(containerHost)
             .dataEndpoint(dataEndpoint)
             .adminEndpoint(adminEndpoint);

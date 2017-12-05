@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.function.BiFunction;
 
+import org.opentosca.toscana.core.parse.converter.visitor.ContainerRuntimeVisitor;
 import org.opentosca.toscana.core.parse.converter.visitor.Context;
 import org.opentosca.toscana.core.parse.converter.visitor.ConversionResult;
 import org.opentosca.toscana.core.parse.converter.visitor.DescribableVisitor;
@@ -17,6 +18,7 @@ import org.opentosca.toscana.model.node.BlockStorage;
 import org.opentosca.toscana.model.node.Compute;
 import org.opentosca.toscana.model.node.ContainerApplication;
 import org.opentosca.toscana.model.node.ContainerRuntime;
+import org.opentosca.toscana.model.node.ContainerRuntime.ContainerRuntimeBuilder;
 import org.opentosca.toscana.model.node.Database;
 import org.opentosca.toscana.model.node.Dbms;
 import org.opentosca.toscana.model.node.DockerApplication;
@@ -146,7 +148,7 @@ class NodeConverter {
     }
 
     private ContainerRuntime toContainerRuntime(String name, TNodeTemplate template) {
-        throw new UnsupportedOperationException();
+        return toNode(name, template, ContainerRuntimeBuilder.class, new ContainerRuntimeVisitor());
     }
 
     private Database toDatabase(String name, TNodeTemplate template) {

@@ -11,9 +11,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.Singular;
 
-import static org.opentosca.toscana.model.capability.ContainerCapability.getFallback;
-import static org.opentosca.toscana.model.relation.HostedOn.getFallback;
-
 @Data
 public class HostRequirement extends Requirement<ContainerCapability, Compute, HostedOn> {
 
@@ -22,6 +19,11 @@ public class HostRequirement extends Requirement<ContainerCapability, Compute, H
                               Range occurrence,
                               @Singular Set<Compute> fulfillers,
                               HostedOn relationship) {
-        super(getFallback(capability), occurrence, fulfillers, getFallback(relationship));
+        super(ContainerCapability.getFallback(capability), occurrence,
+            fulfillers, HostedOn.getFallback(relationship));
+    }
+
+    public static HostRequirement getFallback(HostRequirement host) {
+        return (host == null) ? HostRequirement.builder().build() : host;
     }
 }

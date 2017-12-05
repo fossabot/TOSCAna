@@ -73,7 +73,7 @@ public class DockerContainerCapability extends ContainerCapability {
                                         @Singular Set<String> volumes,
                                         String hostId,
                                         String volumeId,
-                                        String name,
+                                        String resourceName,
                                         Integer numCpus,
                                         Double cpuFrequencyInGhz,
                                         Integer diskSizeInMB,
@@ -81,7 +81,7 @@ public class DockerContainerCapability extends ContainerCapability {
                                         @Singular Set<Class<? extends RootNode>> validSourceTypes,
                                         Range occurence,
                                         String description) {
-        super(name, numCpus, cpuFrequencyInGhz, diskSizeInMB, memSizeInMB, validSourceTypes, occurence, description);
+        super(resourceName, numCpus, cpuFrequencyInGhz, diskSizeInMB, memSizeInMB, validSourceTypes, occurence, description);
         this.versions = Objects.requireNonNull(versions);
         this.publishAll = publishAll;
         this.publishPorts = Objects.requireNonNull(publishPorts);
@@ -89,6 +89,11 @@ public class DockerContainerCapability extends ContainerCapability {
         this.volumes = Objects.requireNonNull(volumes);
         this.hostId = hostId;
         this.volumeId = volumeId;
+    }
+    
+    public static DockerContainerCapability getFallback(DockerContainerCapability c){
+        return (c == null) ? DockerContainerCapability.builder().build() : c;
+        
     }
 
     /**

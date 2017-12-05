@@ -17,7 +17,7 @@ import lombok.Singular;
 public class ContainerCapability extends ComputeCapability {
 
     @Builder
-    protected ContainerCapability(String name,
+    protected ContainerCapability(String resourceName,
                                   Integer numCpus,
                                   Double cpuFrequencyInGhz,
                                   Integer diskSizeInMB,
@@ -25,7 +25,7 @@ public class ContainerCapability extends ComputeCapability {
                                   @Singular Set<Class<? extends RootNode>> validSourceTypes,
                                   Range occurence,
                                   String description) {
-        super(name, numCpus, cpuFrequencyInGhz, diskSizeInMB, memSizeInMB, validSourceTypes, occurence, description);
+        super(resourceName, numCpus, cpuFrequencyInGhz, diskSizeInMB, memSizeInMB, validSourceTypes, occurence, description);
     }
 
     public static ContainerCapability getFallback(ContainerCapability c) {

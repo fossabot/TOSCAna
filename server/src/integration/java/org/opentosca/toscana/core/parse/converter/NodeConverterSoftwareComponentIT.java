@@ -23,7 +23,6 @@ public class NodeConverterSoftwareComponentIT extends BaseIntegrationTest {
         Credential credential = softwareComponent.getAdminCredential().get();
         assertEquals("securePassword", credential.getToken());
         assertEquals("alice", credential.getUser().get());
-        
         assertEquals("3.5.1", softwareComponent.getComponentVersion().get());
     }
 }

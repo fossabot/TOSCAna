@@ -1,7 +1,5 @@
 package org.opentosca.toscana.model.node;
 
-import java.util.Objects;
-
 import org.opentosca.toscana.model.operation.StandardLifecycle;
 import org.opentosca.toscana.model.requirement.DockerHostRequirement;
 import org.opentosca.toscana.model.requirement.EndpointRequirement;
@@ -28,24 +26,21 @@ public class DockerApplication extends ContainerApplication {
                               StandardLifecycle standardLifecycle,
                               String description) {
         super(storage, network, nodeName, standardLifecycle, description);
-        this.host = Objects.requireNonNull(host);
+        this.host = (host == null) ? DockerHostRequirement.builder().build() : host;
 
         requirements.add(this.host);
     }
 
     /**
      @param nodeName {@link #nodeName}
-     @param host     {@link #host}
      @param network  {@link #network}
      @param storage  {@link #storage}
      */
-    public static DockerApplicationBuilder builder(DockerHostRequirement host,
-                                                   String nodeName,
+    public static DockerApplicationBuilder builder(String nodeName,
                                                    EndpointRequirement network,
                                                    StorageRequirement storage) {
         return new DockerApplicationBuilder()
             .nodeName(nodeName)
-            .host(host)
             .network(network)
             .storage(storage);
     }

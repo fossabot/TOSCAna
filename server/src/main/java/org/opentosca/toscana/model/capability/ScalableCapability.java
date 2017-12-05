@@ -1,6 +1,5 @@
 package org.opentosca.toscana.model.capability;
 
-import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 
@@ -25,6 +24,8 @@ public class ScalableCapability extends Capability {
      Indicates the minimum and maximum number of instances that should be created
      for the associated TOSCA Node Template by a TOSCA orchestrator.
      (TOSCA Simple Profile in YAML Version 1.1, p. 157)
+     <p>
+     Defaults to {@link Range#EXACTLY_ONCE}.
      */
     private final Range scaleRange;
 
@@ -42,20 +43,13 @@ public class ScalableCapability extends Capability {
                                  Range occurence,
                                  String description) {
         super(validSourceTypes, occurence, description);
+        this.scaleRange = (scaleRange == null) ? Range.EXACTLY_ONCE : scaleRange;
+        this.defaultInstances = defaultInstances;
         if (defaultInstances != null && !scaleRange.inRange(defaultInstances)) {
             throw new IllegalArgumentException(format(
                 "Constraint violation: range.min (%d) <= defaultInstances (%d) <= range.max (%d)",
                 scaleRange.min, defaultInstances, scaleRange.max));
         }
-        this.scaleRange = Objects.requireNonNull(scaleRange);
-        this.defaultInstances = defaultInstances;
-    }
-
-    /**
-     @param scaleRange {@link #scaleRange}
-     */
-    public static ScalableCapabilityBuilder builder(Range scaleRange) {
-        return new ScalableCapabilityBuilder().scaleRange(scaleRange);
     }
 
     /**
@@ -69,7 +63,7 @@ public class ScalableCapability extends Capability {
     public void accept(CapabilityVisitor v) {
         v.visit(this);
     }
-   
+
     public static class ScalableCapabilityBuilder extends DescribableEntityBuilder {
     }
 }

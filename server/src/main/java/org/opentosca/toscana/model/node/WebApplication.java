@@ -41,13 +41,7 @@ public class WebApplication extends RootNode {
         super(nodeName, standardLifecycle, description);
         this.contextRoot = contextRoot;
         this.appEndpoint = Objects.requireNonNull(endpoint);
-        if (host != null) {
-            this.host = host;
-        } else {
-            ContainerCapability containerCapability = ContainerCapability.builder().build();
-            this.host = WebServerRequirement.builder(
-                containerCapability, HostedOn.builder().build()).build();
-        }
+        this.host = (host == null) ? WebServerRequirement.builder().build() : host;
 
         capabilities.add(this.appEndpoint);
         requirements.add(this.host);
