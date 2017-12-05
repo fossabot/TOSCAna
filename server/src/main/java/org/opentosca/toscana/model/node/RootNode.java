@@ -13,7 +13,6 @@ import org.opentosca.toscana.model.requirement.Dependency;
 import org.opentosca.toscana.model.requirement.Requirement;
 import org.opentosca.toscana.model.visitor.VisitableNode;
 
-import lombok.Builder;
 import lombok.Data;
 
 /**

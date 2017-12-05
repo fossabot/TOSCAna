@@ -5,6 +5,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.function.BiFunction;
 
+import org.opentosca.toscana.core.parse.converter.visitor.Context;
+import org.opentosca.toscana.core.parse.converter.visitor.SoftwareComponentVisitor;
 import org.opentosca.toscana.model.capability.ContainerCapability;
 import org.opentosca.toscana.model.node.Apache;
 import org.opentosca.toscana.model.node.BlockStorage;
@@ -20,6 +22,7 @@ import org.opentosca.toscana.model.node.Nodejs;
 import org.opentosca.toscana.model.node.ObjectStorage;
 import org.opentosca.toscana.model.node.RootNode;
 import org.opentosca.toscana.model.node.SoftwareComponent;
+import org.opentosca.toscana.model.node.SoftwareComponent.SoftwareComponentBuilder;
 import org.opentosca.toscana.model.node.WebApplication;
 import org.opentosca.toscana.model.node.WebServer;
 import org.opentosca.toscana.model.node.WordPress;
@@ -28,13 +31,12 @@ import org.opentosca.toscana.model.requirement.HostRequirement;
 
 import com.google.common.collect.Sets;
 import org.eclipse.winery.model.tosca.yaml.TNodeTemplate;
-import org.eclipse.winery.model.tosca.yaml.visitor.AbstractVisitor;
 import org.slf4j.Logger;
 
 /**
  Contains logic to convert TOSCA node templates into nodes of the EffectiveModel
  */
-class NodeConverter extends AbstractVisitor {
+class NodeConverter {
 
     static final String TOSCA_PREFIX = "tosca.nodes.";
     private final Logger logger;
@@ -155,10 +157,8 @@ class NodeConverter extends AbstractVisitor {
     }
 
     private SoftwareComponent toSoftwareComponent(String name, TNodeTemplate template) {
-        ContainerCapability containerCapability = ContainerCapability.builder().build();
-        HostRequirement host = HostRequirement.builder(containerCapability, HostedOn.builder().build()).build();
-        SoftwareComponent softwareComponent = SoftwareComponent.builder(name, host).build();
-        return softwareComponent;
+        Context<SoftwareComponentBuilder> context = new Context<>(name, BuilderUtil.newInstance(SoftwareComponentBuilder.class));
+        return new SoftwareComponentVisitor().visit(template, context).getNode();
     }
 
     private WebApplication toWebApplication(String name, TNodeTemplate template) {
