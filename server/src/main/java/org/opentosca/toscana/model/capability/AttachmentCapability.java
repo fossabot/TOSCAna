@@ -28,7 +28,11 @@ public class AttachmentCapability extends Capability {
     public void accept(CapabilityVisitor v) {
         v.visit(this);
     }
-    
+
+    public static AttachmentCapability getFallback(AttachmentCapability c) {
+        return (c == null) ? AttachmentCapability.builder().build() : c;
+    }
+
     public static class AttachmentCapabilityBuilder extends DescribableEntityBuilder {
     }
 }

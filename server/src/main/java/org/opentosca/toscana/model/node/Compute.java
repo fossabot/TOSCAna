@@ -6,37 +6,37 @@ import java.util.Optional;
 import java.util.Set;
 
 import org.opentosca.toscana.model.capability.AdminEndpointCapability;
-import org.opentosca.toscana.model.capability.AttachmentCapability;
 import org.opentosca.toscana.model.capability.BindableCapability;
 import org.opentosca.toscana.model.capability.ContainerCapability;
 import org.opentosca.toscana.model.capability.OsCapability;
-import org.opentosca.toscana.model.requirement.BlockStorageRequirement;
-import org.opentosca.toscana.model.requirement.Requirement;
 import org.opentosca.toscana.model.capability.ScalableCapability;
 import org.opentosca.toscana.model.datatype.NetworkInfo;
 import org.opentosca.toscana.model.datatype.PortInfo;
 import org.opentosca.toscana.model.operation.StandardLifecycle;
-import org.opentosca.toscana.model.relation.AttachesTo;
+import org.opentosca.toscana.model.requirement.BlockStorageRequirement;
 import org.opentosca.toscana.model.visitor.NodeVisitor;
 
 import lombok.Builder;
 import lombok.Data;
 
 /**
- Represents one or more real or virtual processors of software applications or services along with other essential local resources.
+ Represents one or more real or virtual processors of software applications or services along with other essential local
+ resources.
  Collectively, the resources the compute node represents can logically be viewed as a (real or virtual) “server”.
  (TOSCA Simple Profile in YAML Version 1.1, p. 169)
  */
 @Data
 public class Compute extends RootNode {
     /**
-     The optional primary private IP address assigned by the cloud provider that applications may use to access the Compute node.
+     The optional primary private IP address assigned by the cloud provider that applications may use to access the
+     Compute node.
      (TOSCA Simple Profile in YAML Version 1.1, p. 169)
      */
     private final String privateAddress;
 
     /**
-     The optional primary public IP address assigned by the cloud provider that applications may use to access the Compute node.
+     The optional primary public IP address assigned by the cloud provider that applications may use to access the
+     Compute node.
      (TOSCA Simple Profile in YAML Version 1.1, p. 169)
      */
     private final String publicAddress;
@@ -84,7 +84,7 @@ public class Compute extends RootNode {
         this.os = Objects.requireNonNull(os);
         this.adminEndpoint = Objects.requireNonNull(adminEndpoint);
         this.scalable = Objects.requireNonNull(scalable);
-        this.binding = Objects.requireNonNull(binding);
+        this.binding = (binding == null) ? BindableCapability.builder().build() : binding;
         this.localStorage = Objects.requireNonNull(localStorage);
 
         capabilities.add(host);
@@ -99,21 +99,18 @@ public class Compute extends RootNode {
      @param nodeName      {@link #nodeName}
      @param adminEndpoint {@link #adminEndpoint}
      @param scalable      {@link #scalable}
-     @param binding       {@link #binding}
      @param localStorage  {@link #localStorage}
      */
     public static ComputeBuilder builder(String nodeName,
                                          OsCapability os,
                                          AdminEndpointCapability adminEndpoint,
                                          ScalableCapability scalable,
-                                         BindableCapability binding,
                                          BlockStorageRequirement localStorage) {
         return new ComputeBuilder()
             .os(os)
             .nodeName(nodeName)
             .adminEndpoint(adminEndpoint)
             .scalable(scalable)
-            .binding(binding)
             .localStorage(localStorage);
     }
 
@@ -135,7 +132,7 @@ public class Compute extends RootNode {
     public void accept(NodeVisitor v) {
         v.visit(this);
     }
-    
+
     public static class ComputeBuilder extends RootNodeBuilder {
     }
 }

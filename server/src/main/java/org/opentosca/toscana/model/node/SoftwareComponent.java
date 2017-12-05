@@ -45,20 +45,17 @@ public class SoftwareComponent extends RootNode {
         super(nodeName, standardLifecycle, description);
         this.componentVersion = componentVersion;
         this.adminCredential = adminCredential;
-        this.host = Objects.requireNonNull(host);
+        this.host = (host == null) ? HostRequirement.builder().build() : host;
 
         requirements.add(host);
     }
 
     /**
      @param nodeName {@link #nodeName}
-     @param host     {@link #host}
      */
-    public static SoftwareComponentBuilder builder(String nodeName,
-                                                   HostRequirement host) {
+    public static SoftwareComponentBuilder builder(String nodeName) {
         return new SoftwareComponentBuilder()
-            .nodeName(nodeName)
-            .host(host);
+            .nodeName(nodeName);
     }
 
     public Optional<String> getComponentVersion() {

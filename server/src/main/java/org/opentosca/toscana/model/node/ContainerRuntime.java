@@ -3,12 +3,10 @@ package org.opentosca.toscana.model.node;
 import java.util.Objects;
 
 import org.opentosca.toscana.model.capability.ContainerCapability;
-import org.opentosca.toscana.model.requirement.HostRequirement;
-import org.opentosca.toscana.model.requirement.Requirement;
 import org.opentosca.toscana.model.capability.ScalableCapability;
 import org.opentosca.toscana.model.datatype.Credential;
 import org.opentosca.toscana.model.operation.StandardLifecycle;
-import org.opentosca.toscana.model.relation.HostedOn;
+import org.opentosca.toscana.model.requirement.HostRequirement;
 import org.opentosca.toscana.model.visitor.NodeVisitor;
 
 import lombok.Builder;
@@ -45,18 +43,15 @@ public class ContainerRuntime extends SoftwareComponent {
 
     /**
      @param nodeName      {@link #nodeName}
-     @param host          {@link #host}
      @param containerHost {@link #containerHost}
      @param scalable      {@link #scalable}
      */
     public static ContainerRuntimeBuilder builder(String nodeName,
-                                                  HostRequirement host,
                                                   ContainerCapability containerHost,
                                                   ScalableCapability scalable) {
         return new ContainerRuntimeBuilder()
             .nodeName(nodeName)
             .scalable(scalable)
-            .host(host)
             .containerHost(containerHost);
     }
 
@@ -64,7 +59,7 @@ public class ContainerRuntime extends SoftwareComponent {
     public void accept(NodeVisitor v) {
         v.visit(this);
     }
-    
+
     public static class ContainerRuntimeBuilder extends SoftwareComponentBuilder {
     }
 }

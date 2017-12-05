@@ -27,7 +27,8 @@ public class MysqlDatabase extends Database {
                          StandardLifecycle standardLifecycle,
                          String description) {
         super(databaseName, port, user, password, databaseEndpoint, nodeName, standardLifecycle, description);
-        this.host = host;
+        
+        this.host = (host == null) ? MysqlDbmsRequirement.builder().build() : host;
 
         requirements.add(host);
     }
@@ -35,16 +36,13 @@ public class MysqlDatabase extends Database {
     /**
      @param nodeName         {@link #nodeName}
      @param databaseName     {@link #databaseEndpoint}
-     @param host             {@link #host}
      @param databaseEndpoint {@link #databaseEndpoint}
      */
     public static MysqlDatabaseBuilder builder(String nodeName,
                                                String databaseName,
-                                               DatabaseEndpointCapability databaseEndpoint,
-                                               MysqlDbmsRequirement host) {
+                                               DatabaseEndpointCapability databaseEndpoint) {
         return (MysqlDatabaseBuilder) new MysqlDatabaseBuilder()
             .nodeName(nodeName)
-            .host(host)
             .databaseName(databaseName)
             .databaseEndpoint(databaseEndpoint);
     }

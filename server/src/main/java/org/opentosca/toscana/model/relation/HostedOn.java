@@ -17,11 +17,15 @@ public class HostedOn extends RootRelationship {
         super(description);
     }
 
+    public static HostedOn getFallback(HostedOn rel) {
+        return (rel == null) ? HostedOn.builder().build() : rel;
+    }
+
     @Override
     public void accept(RelationshipVisitor v) {
         v.visit(this);
     }
-    
+
     public static class HostedOnBuilder extends DescribableEntityBuilder {
     }
 }

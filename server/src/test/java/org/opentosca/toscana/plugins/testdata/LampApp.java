@@ -4,15 +4,10 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.opentosca.toscana.model.capability.AdminEndpointCapability;
-import org.opentosca.toscana.model.capability.AttachmentCapability;
-import org.opentosca.toscana.model.capability.BindableCapability;
 import org.opentosca.toscana.model.capability.ContainerCapability;
 import org.opentosca.toscana.model.capability.DatabaseEndpointCapability;
 import org.opentosca.toscana.model.capability.EndpointCapability;
 import org.opentosca.toscana.model.capability.OsCapability;
-import org.opentosca.toscana.model.requirement.HostRequirement;
-import org.opentosca.toscana.model.requirement.BlockStorageRequirement;
-import org.opentosca.toscana.model.requirement.MysqlDbmsRequirement;
 import org.opentosca.toscana.model.capability.ScalableCapability;
 import org.opentosca.toscana.model.datatype.Port;
 import org.opentosca.toscana.model.datatype.Range;
@@ -26,7 +21,8 @@ import org.opentosca.toscana.model.operation.Operation;
 import org.opentosca.toscana.model.operation.OperationVariable;
 import org.opentosca.toscana.model.operation.StandardLifecycle;
 import org.opentosca.toscana.model.relation.AttachesTo;
-import org.opentosca.toscana.model.relation.HostedOn;
+import org.opentosca.toscana.model.requirement.BlockStorageRequirement;
+import org.opentosca.toscana.model.requirement.HostRequirement;
 
 public class LampApp {
 
@@ -56,12 +52,10 @@ public class LampApp {
             .builder("127.0.0.1")
             .port(new Port(80)).build();
         ScalableCapability scalableCapability = ScalableCapability.builder(Range.EXACTLY_ONCE).build();
-        BindableCapability bindableCapability = BindableCapability.builder().build();
         AttachesTo attachesTo = AttachesTo.builder("mount").build();
-        AttachmentCapability attachmentCapability = AttachmentCapability.builder().build();
 
         BlockStorageRequirement localStorage =
-            BlockStorageRequirement.builder(attachmentCapability, attachesTo).build();
+            BlockStorageRequirement.builder(attachesTo).build();
 
         OsCapability osCapability = OsCapability.builder()
             .distribution(OsCapability.Distribution.UBUNTU)
@@ -70,7 +64,7 @@ public class LampApp {
             .build();
 
         Compute computeNode = Compute.builder("server", osCapability, computeAdminEndpointCap, scalableCapability,
-            bindableCapability, localStorage).host(containerCapability).build();
+            localStorage).host(containerCapability).build();
         return computeNode;
     }
 
@@ -116,13 +110,7 @@ public class LampApp {
         DatabaseEndpointCapability dbEndpointCapability = DatabaseEndpointCapability.builder("127.0.0.1")
             .port(new Port(3306))
             .build();
-        ContainerCapability dbContainerCapability = ContainerCapability.builder().build();
-        HostedOn hostedOn = HostedOn.builder().build();
-        MysqlDbmsRequirement requirement = MysqlDbmsRequirement.builder(dbContainerCapability, hostedOn)
-            .build();
-
-        MysqlDatabase mydb = MysqlDatabase.builder("my_db", "DBNAME", dbEndpointCapability,
-            requirement)
+        MysqlDatabase mydb = MysqlDatabase.builder("my_db", "DBNAME", dbEndpointCapability)
             .build();
 
         return mydb;
@@ -151,10 +139,7 @@ public class LampApp {
     private HostRequirement getHostedOnServerRequirement() {
         ContainerCapability hostCapability = ContainerCapability.builder().name("server").build();
 
-        return HostRequirement.builder(
-            hostCapability,
-            HostedOn.builder().build()
-        ).build();
+        return HostRequirement.builder().capability(hostCapability).build();
     }
 
     private WebApplication createWebApplication() {

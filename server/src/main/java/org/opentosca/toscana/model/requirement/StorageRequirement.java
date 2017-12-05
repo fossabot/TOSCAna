@@ -19,13 +19,11 @@ public class StorageRequirement extends Requirement<StorageCapability, RootNode,
                                  Range occurrence,
                                  @Singular Set<RootNode> fulfillers,
                                  RootRelationship relationship) {
-        super(capability, occurrence, fulfillers, relationship);
+        super(StorageCapability.getFallback(capability), occurrence, fulfillers, relationship);
     }
 
-    public static StorageRequirementBuilder builder(StorageCapability capability,
-                                                    RootRelationship relationship) {
+    public static StorageRequirementBuilder builder(RootRelationship relationship) {
         return new StorageRequirementBuilder()
-            .capability(capability)
             .relationship(relationship);
     }
 }

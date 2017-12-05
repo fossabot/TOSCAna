@@ -28,6 +28,10 @@ public class ContainerCapability extends ComputeCapability {
         super(name, numCpus, cpuFrequencyInGhz, diskSizeInMB, memSizeInMB, validSourceTypes, occurence, description);
     }
 
+    public static ContainerCapability getFallback(ContainerCapability c) {
+        return (c == null) ? ContainerCapability.builder().build() : c;
+    }
+    
     @Override
     public void accept(CapabilityVisitor v) {
         v.visit(this);

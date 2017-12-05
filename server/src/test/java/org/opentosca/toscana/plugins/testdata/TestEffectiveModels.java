@@ -12,7 +12,6 @@ import org.opentosca.toscana.model.capability.DockerContainerCapability;
 import org.opentosca.toscana.model.capability.EndpointCapability;
 import org.opentosca.toscana.model.capability.OsCapability;
 import org.opentosca.toscana.model.capability.ScalableCapability;
-import org.opentosca.toscana.model.capability.StorageCapability;
 import org.opentosca.toscana.model.datatype.Port;
 import org.opentosca.toscana.model.datatype.Range;
 import org.opentosca.toscana.model.node.Compute;
@@ -24,7 +23,6 @@ import org.opentosca.toscana.model.relation.HostedOn;
 import org.opentosca.toscana.model.requirement.BlockStorageRequirement;
 import org.opentosca.toscana.model.requirement.DockerHostRequirement;
 import org.opentosca.toscana.model.requirement.EndpointRequirement;
-import org.opentosca.toscana.model.requirement.HostRequirement;
 import org.opentosca.toscana.model.requirement.StorageRequirement;
 
 import com.google.common.collect.Sets;
@@ -61,19 +59,15 @@ public class TestEffectiveModels {
     public static EffectiveModel getMinimalDockerModel() {
         DockerContainerCapability containerCapability = DockerContainerCapability.builder().name("host").build();
         ScalableCapability scalableCapability = ScalableCapability.builder(Range.EXACTLY_ONCE).build();
-        HostRequirement requirement = HostRequirement.builder(containerCapability, HostedOn.builder().build()).build();
         ContainerRuntime dockerRuntime
-            = ContainerRuntime.builder("dockerRuntime", requirement,
-            containerCapability, scalableCapability).build();
-        HostedOn hostedOn = HostedOn.builder().build();
-        DockerHostRequirement host = DockerHostRequirement.builder(containerCapability, hostedOn)
+            = ContainerRuntime.builder("dockerRuntime", containerCapability, scalableCapability).build();
+        DockerHostRequirement host = DockerHostRequirement.builder(containerCapability)
             .fulfiller(dockerRuntime)
             .build();
         EndpointCapability endpointCapability = EndpointCapability.builder("127.0.0.1", new Port(80)).build();
-        EndpointRequirement network = EndpointRequirement.builder(endpointCapability, hostedOn).build();
-        StorageCapability storageCapability = StorageCapability.builder().build();
+        EndpointRequirement network = EndpointRequirement.builder(endpointCapability, HostedOn.builder().build()).build();
         AttachesTo attachesTo = AttachesTo.builder("/").build();
-        StorageRequirement storage = StorageRequirement.builder(storageCapability, attachesTo).build();
+        StorageRequirement storage = StorageRequirement.builder(attachesTo).build();
         DockerApplication simpleTaskApp
             = DockerApplication.builder(host, "simpleTaskApp", network, storage).build();
         return new EffectiveModel(Sets.newHashSet(simpleTaskApp, dockerRuntime));

@@ -6,6 +6,7 @@ import org.opentosca.toscana.model.datatype.Credential;
 import org.opentosca.toscana.model.node.SoftwareComponent;
 import org.opentosca.toscana.model.node.SoftwareComponent.SoftwareComponentBuilder;
 
+import org.eclipse.winery.model.tosca.yaml.TCapabilityAssignment;
 import org.eclipse.winery.model.tosca.yaml.TPropertyAssignment;
 
 public class SoftwareComponentVisitor<NodeT extends SoftwareComponent, BuilderT extends SoftwareComponentBuilder> extends RootNodeVisitor<NodeT, BuilderT> {
@@ -28,7 +29,12 @@ public class SoftwareComponentVisitor<NodeT extends SoftwareComponent, BuilderT 
             default:
                 super.visit(node, parameter);
         }
-       
+
         return null;
+    }
+
+    @Override
+    public ConversionResult<NodeT> visit(TCapabilityAssignment node, Context<BuilderT> parameter) {
+        return super.visit(node, parameter);
     }
 }
