@@ -58,7 +58,6 @@ public class ScalableCapability extends Capability {
         return new ScalableCapabilityBuilder().scaleRange(scaleRange);
     }
 
-
     /**
      @return {@link #defaultInstances}
      */
@@ -68,7 +67,9 @@ public class ScalableCapability extends Capability {
 
     @Override
     public void accept(CapabilityVisitor v) {
-
         v.visit(this);
+    }
+   
+    public static class ScalableCapabilityBuilder extends DescribableEntityBuilder {
     }
 }

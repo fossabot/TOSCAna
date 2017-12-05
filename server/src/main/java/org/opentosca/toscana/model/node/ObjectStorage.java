@@ -91,4 +91,7 @@ public class ObjectStorage extends RootNode {
     public void accept(NodeVisitor v) {
         v.visit(this);
     }
+    
+    public static class ObjectStorageBuilder extends DescribableEntityBuilder {
+    }
 }

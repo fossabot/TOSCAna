@@ -24,11 +24,12 @@ public class BindableCapability extends NodeCapability {
         super(validSourceTypes, occurence, description);
     }
 
-    public static class BindableCapabilityBuilder extends NodeCapabilityBuilder {
-    }
 
     @Override
     public void accept(CapabilityVisitor v) {
         v.visit(this);
+    }
+    
+    public static class BindableCapabilityBuilder extends NodeCapabilityBuilder {
     }
 }

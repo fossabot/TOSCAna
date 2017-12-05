@@ -21,4 +21,7 @@ public class HostedOn extends RootRelationship {
     public void accept(RelationshipVisitor v) {
         v.visit(this);
     }
+    
+    public static class HostedOnBuilder extends DescribableEntityBuilder {
+    }
 }

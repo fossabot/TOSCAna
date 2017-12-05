@@ -134,4 +134,7 @@ public class BlockStorage extends RootNode {
     public void accept(NodeVisitor v) {
         v.visit(this);
     }
+    
+    public static class BlockStorageBuilder extends DescribableEntityBuilder {
+    }
 }

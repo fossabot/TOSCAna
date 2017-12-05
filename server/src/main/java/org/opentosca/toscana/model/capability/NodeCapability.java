@@ -28,4 +28,7 @@ public class NodeCapability extends Capability {
     public void accept(CapabilityVisitor v) {
         v.visit(this);
     }
+    
+    public static class NodeCapabilityBuilder extends DescribableEntityBuilder {
+    }
 }

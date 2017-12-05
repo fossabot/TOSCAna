@@ -68,4 +68,7 @@ public class LoadBalancer extends RootNode {
     public void accept(NodeVisitor v) {
         v.visit(this);
     }
+    
+    public static class LoadBalancerBuilder extends DescribableEntityBuilder {
+    }
 }

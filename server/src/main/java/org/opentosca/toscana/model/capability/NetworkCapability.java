@@ -44,4 +44,7 @@ public class NetworkCapability extends Capability {
     public void accept(CapabilityVisitor v) {
         v.visit(this);
     }
+    
+    public static class NetworkCapabilityBuilder extends DescribableEntityBuilder {
+    }
 }

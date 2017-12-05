@@ -48,11 +48,11 @@ public class AdminEndpointCapability extends EndpointCapability {
         return new AdminEndpointCapabilityBuilder().ipAddress(ipAddress);
     }
 
-    public static class AdminEndpointCapabilityBuilder extends EndpointCapabilityBuilder {
-    }
-
     @Override
     public void accept(CapabilityVisitor v) {
         v.visit(this);
+    }
+
+    public static class AdminEndpointCapabilityBuilder extends EndpointCapabilityBuilder {
     }
 }

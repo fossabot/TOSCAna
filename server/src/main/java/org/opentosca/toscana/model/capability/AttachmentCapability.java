@@ -28,4 +28,7 @@ public class AttachmentCapability extends Capability {
     public void accept(CapabilityVisitor v) {
         v.visit(this);
     }
+    
+    public static class AttachmentCapabilityBuilder extends DescribableEntityBuilder {
+    }
 }

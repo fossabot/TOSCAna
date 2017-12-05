@@ -2,19 +2,12 @@ package org.opentosca.toscana.model.node;
 
 import java.util.Objects;
 
-import org.opentosca.toscana.model.capability.DockerContainerCapability;
-import org.opentosca.toscana.model.capability.EndpointCapability;
+import org.opentosca.toscana.model.operation.StandardLifecycle;
 import org.opentosca.toscana.model.requirement.DockerHostRequirement;
 import org.opentosca.toscana.model.requirement.EndpointRequirement;
-import org.opentosca.toscana.model.requirement.Requirement;
-import org.opentosca.toscana.model.capability.StorageCapability;
-import org.opentosca.toscana.model.operation.StandardLifecycle;
-import org.opentosca.toscana.model.relation.HostedOn;
-import org.opentosca.toscana.model.relation.RootRelationship;
 import org.opentosca.toscana.model.requirement.StorageRequirement;
 import org.opentosca.toscana.model.visitor.NodeVisitor;
 
-import com.spotify.docker.client.DockerHost;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Data;
@@ -60,5 +53,8 @@ public class DockerApplication extends ContainerApplication {
     @Override
     public void accept(NodeVisitor v) {
         v.visit(this);
+    }
+
+    public static class DockerApplicationBuilder extends ContainerApplicationBuilder {
     }
 }

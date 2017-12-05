@@ -76,4 +76,7 @@ public class WebServer extends SoftwareComponent {
     public void accept(NodeVisitor v) {
         v.visit(this);
     }
+    
+    public static class WebServerBuilder extends SoftwareComponentBuilder {
+    }
 }

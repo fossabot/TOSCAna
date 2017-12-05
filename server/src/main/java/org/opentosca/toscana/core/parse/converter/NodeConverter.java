@@ -6,8 +6,6 @@ import java.util.Set;
 import java.util.function.BiFunction;
 
 import org.opentosca.toscana.model.capability.ContainerCapability;
-import org.opentosca.toscana.model.requirement.HostRequirement;
-import org.opentosca.toscana.model.requirement.Requirement;
 import org.opentosca.toscana.model.node.Apache;
 import org.opentosca.toscana.model.node.BlockStorage;
 import org.opentosca.toscana.model.node.Compute;
@@ -26,18 +24,20 @@ import org.opentosca.toscana.model.node.WebApplication;
 import org.opentosca.toscana.model.node.WebServer;
 import org.opentosca.toscana.model.node.WordPress;
 import org.opentosca.toscana.model.relation.HostedOn;
+import org.opentosca.toscana.model.requirement.HostRequirement;
 
 import com.google.common.collect.Sets;
 import org.eclipse.winery.model.tosca.yaml.TNodeTemplate;
+import org.eclipse.winery.model.tosca.yaml.visitor.AbstractVisitor;
 import org.slf4j.Logger;
 
 /**
  Contains logic to convert TOSCA node templates into nodes of the EffectiveModel
  */
-class NodeConverter {
+class NodeConverter extends AbstractVisitor {
 
-    private final Logger logger;
     static final String TOSCA_PREFIX = "tosca.nodes.";
+    private final Logger logger;
 
     private Map<String, BiFunction<String, TNodeTemplate, RootNode>> conversionMap = new HashMap<>();
 
@@ -155,11 +155,10 @@ class NodeConverter {
     }
 
     private SoftwareComponent toSoftwareComponent(String name, TNodeTemplate template) {
-        
-//        HostRequirement host = HostRequirement.builder();
-//            Requirement.<ContainerCapability, Compute, HostedOn>builder(host).build();
-//        SoftwareComponent softwareComponent = SoftwareComponent.builder(name, );
-        return null;
+        ContainerCapability containerCapability = ContainerCapability.builder().build();
+        HostRequirement host = HostRequirement.builder(containerCapability, HostedOn.builder().build()).build();
+        SoftwareComponent softwareComponent = SoftwareComponent.builder(name, host).build();
+        return softwareComponent;
     }
 
     private WebApplication toWebApplication(String name, TNodeTemplate template) {

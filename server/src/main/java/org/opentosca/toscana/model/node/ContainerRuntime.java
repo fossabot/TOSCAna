@@ -64,4 +64,7 @@ public class ContainerRuntime extends SoftwareComponent {
     public void accept(NodeVisitor v) {
         v.visit(this);
     }
+    
+    public static class ContainerRuntimeBuilder extends SoftwareComponentBuilder {
+    }
 }

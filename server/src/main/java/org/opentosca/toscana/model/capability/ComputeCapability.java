@@ -130,4 +130,7 @@ public class ComputeCapability extends Capability {
     public void accept(CapabilityVisitor v) {
         v.visit(this);
     }
+    
+    public static class ComputeCapabilityBuilder extends DescribableEntityBuilder {
+    }
 }

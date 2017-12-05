@@ -28,11 +28,11 @@ public class ContainerCapability extends ComputeCapability {
         super(name, numCpus, cpuFrequencyInGhz, diskSizeInMB, memSizeInMB, validSourceTypes, occurence, description);
     }
 
-    public static class ContainerCapabilityBuilder extends ComputeCapabilityBuilder {
-    }
-
     @Override
     public void accept(CapabilityVisitor v) {
         v.visit(this);
+    }
+
+    public static class ContainerCapabilityBuilder extends ComputeCapabilityBuilder {
     }
 }

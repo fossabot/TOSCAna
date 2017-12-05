@@ -44,4 +44,7 @@ public class StorageCapability extends Capability {
     public void accept(CapabilityVisitor v) {
         v.visit(this);
     }
+    
+    public static class StorageCapabilityBuilder extends DescribableEntityBuilder {
+    }
 }

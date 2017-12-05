@@ -105,11 +105,11 @@ public class DockerContainerCapability extends ContainerCapability {
         return Optional.ofNullable(volumeId);
     }
 
-    public static class DockerContainerCapabilityBuilder extends ContainerCapabilityBuilder {
-    }
-
     @Override
     public void accept(CapabilityVisitor v) {
         v.visit(this);
+    }
+   
+    public static class DockerContainerCapabilityBuilder extends ContainerCapabilityBuilder {
     }
 }

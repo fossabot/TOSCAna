@@ -80,7 +80,6 @@ public class PublicEndpointCapability extends EndpointCapability {
         return Optional.ofNullable(dnsName);
     }
 
-
     /**
      @param ipAddress {@link #ipAddress}
      */
@@ -88,11 +87,11 @@ public class PublicEndpointCapability extends EndpointCapability {
         return new PublicEndpointCapabilityBuilder().ipAddress(ipAddress);
     }
 
-    public static class PublicEndpointCapabilityBuilder extends EndpointCapabilityBuilder {
-    }
-
     @Override
     public void accept(CapabilityVisitor v) {
         v.visit(this);
+    }
+
+    public static class PublicEndpointCapabilityBuilder extends EndpointCapabilityBuilder {
     }
 }

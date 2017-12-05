@@ -20,4 +20,7 @@ public class DependsOn extends RootRelationship {
     public void accept(RelationshipVisitor v) {
         v.visit(this);
     }
+    
+    public static class DependsOnBuilder extends DescribableEntityBuilder {
+    }
 }

@@ -44,11 +44,11 @@ public class DatabaseEndpointCapability extends EndpointCapability {
         return new DatabaseEndpointCapabilityBuilder().ipAddress(ipAddress);
     }
 
-    public static class DatabaseEndpointCapabilityBuilder extends EndpointCapabilityBuilder {
-    }
-
     @Override
     public void accept(CapabilityVisitor v) {
         v.visit(this);
+    }
+    
+    public static class DatabaseEndpointCapabilityBuilder extends EndpointCapabilityBuilder {
     }
 }
