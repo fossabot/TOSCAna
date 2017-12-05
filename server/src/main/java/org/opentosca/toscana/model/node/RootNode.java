@@ -13,6 +13,7 @@ import org.opentosca.toscana.model.requirement.Dependency;
 import org.opentosca.toscana.model.requirement.Requirement;
 import org.opentosca.toscana.model.visitor.VisitableNode;
 
+import lombok.Builder;
 import lombok.Data;
 
 /**
@@ -43,6 +44,7 @@ public abstract class RootNode extends DescribableEntity implements VisitableNod
 
     private final StandardLifecycle standardLifecycle;
 
+    @Builder
     protected RootNode(String nodeName,
                        StandardLifecycle standardLifecycle,
                        String description) {
@@ -54,5 +56,21 @@ public abstract class RootNode extends DescribableEntity implements VisitableNod
         this.standardLifecycle = (standardLifecycle == null) ? StandardLifecycle.builder().build() : standardLifecycle;
         capabilities.add(feature);
         requirements.addAll(dependencies);
+    }
+
+    /**
+     @param nodeName {@link #nodeName}
+     */
+    public static RootNodeBuilder builder(String nodeName) {
+        return new RootNodeBuilder().nodeName(nodeName);
+    }
+
+    public static class RootNodeBuilder extends DescribableEntityBuilder {
+
+        @Override
+        public RootNode build() {
+            // should never be called (RootNode is abstract)
+            throw new UnsupportedOperationException();
+        }
     }
 }

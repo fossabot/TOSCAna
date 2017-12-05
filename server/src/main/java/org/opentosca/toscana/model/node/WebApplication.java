@@ -75,6 +75,6 @@ public class WebApplication extends RootNode {
         v.visit(this);
     }
     
-    public static class WebApplicationBuilder extends DescribableEntityBuilder {
+    public static class WebApplicationBuilder extends RootNodeBuilder {
     }
 }

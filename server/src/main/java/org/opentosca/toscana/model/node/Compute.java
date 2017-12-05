@@ -136,7 +136,7 @@ public class Compute extends RootNode {
         v.visit(this);
     }
     
-    public static class ComputeBuilder extends DescribableEntityBuilder {
+    public static class ComputeBuilder extends RootNodeBuilder {
     }
 }
 

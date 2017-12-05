@@ -131,6 +131,6 @@ public class Database extends RootNode {
         v.visit(this);
     }
     
-    public static class DatabaseBuilder extends DescribableEntityBuilder {
+    public static class DatabaseBuilder extends RootNodeBuilder {
     }
 }

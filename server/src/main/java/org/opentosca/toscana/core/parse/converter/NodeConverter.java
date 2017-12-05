@@ -6,6 +6,7 @@ import java.util.Set;
 import java.util.function.BiFunction;
 
 import org.opentosca.toscana.core.parse.converter.visitor.Context;
+import org.opentosca.toscana.core.parse.converter.visitor.ConversionResult;
 import org.opentosca.toscana.core.parse.converter.visitor.SoftwareComponentVisitor;
 import org.opentosca.toscana.model.capability.ContainerCapability;
 import org.opentosca.toscana.model.node.Apache;
@@ -158,7 +159,8 @@ class NodeConverter {
 
     private SoftwareComponent toSoftwareComponent(String name, TNodeTemplate template) {
         Context<SoftwareComponentBuilder> context = new Context<>(name, BuilderUtil.newInstance(SoftwareComponentBuilder.class));
-        return new SoftwareComponentVisitor().visit(template, context).getNode();
+        ConversionResult<SoftwareComponent> result = new SoftwareComponentVisitor().visit(template, context);
+        return result.getNode();
     }
 
     private WebApplication toWebApplication(String name, TNodeTemplate template) {

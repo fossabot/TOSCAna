@@ -74,6 +74,6 @@ public class SoftwareComponent extends RootNode {
         v.visit(this);
     }
     
-    public static class SoftwareComponentBuilder extends DescribableEntityBuilder {
+    public static class SoftwareComponentBuilder extends RootNodeBuilder {
     }
 }

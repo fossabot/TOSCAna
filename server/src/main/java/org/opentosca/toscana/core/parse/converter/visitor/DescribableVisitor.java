@@ -4,14 +4,15 @@ import org.opentosca.toscana.model.DescribableEntity;
 import org.opentosca.toscana.model.DescribableEntity.DescribableEntityBuilder;
 
 import org.eclipse.winery.model.tosca.yaml.TNodeTemplate;
-import org.eclipse.winery.model.tosca.yaml.visitor.AbstractVisitor;
 
-public class DescribableVisitor extends AbstractVisitor<ConversionResult<DescribableEntity>, Context<DescribableEntityBuilder>> {
+public class DescribableVisitor<NodeT extends DescribableEntity, BuilderT extends DescribableEntityBuilder> extends ConverterVisitor<NodeT, BuilderT> {
 
     @Override
-    public ConversionResult<DescribableEntity> visit(TNodeTemplate node, Context<DescribableEntityBuilder> parameter) {
-        DescribableEntityBuilder builder = parameter.getNodeBuilder();
+    public ConversionResult<NodeT> visit(TNodeTemplate node, Context<BuilderT> parameter) {
+        BuilderT builder = parameter.getNodeBuilder();
         builder.description(node.getDescription());
-        return super.visit(node, parameter);
+        super.visit(node, parameter);
+        ConversionResult<NodeT> result = new ConversionResult<NodeT>((NodeT) builder.build());
+        return result;
     }
 }

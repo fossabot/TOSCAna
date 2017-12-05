@@ -86,6 +86,6 @@ public class ContainerApplication extends RootNode {
         v.visit(this);
     }
     
-    public static class ContainerApplicationBuilder extends DescribableEntityBuilder {
+    public static class ContainerApplicationBuilder extends RootNodeBuilder {
     }
 }
