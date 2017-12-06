@@ -53,20 +53,20 @@ class NodeConverter {
         addRule("Compute", this::toCompute);
         addRule("Container.Application", this::toContainerApplication);
         addRule("Container.Runtime", this::toContainerRuntime);
-        addRule("BlockStorage", "Storage", this::toBlockStorage);
+        addRule("Storage", "BlockStorage", this::toBlockStorage);
         addRule("Database", this::toDatabase);
         addRule("Database.MySQL", this::toMysqlDbms);
-        addRule("Application.Docker", "Container", this::toDockerApplication);
+        addRule("Container", "Application.Docker", this::toDockerApplication);
         addRule("DBMS", this::toDbms);
         addRule("DBMS.MySQL", this::toMysqlDbms);
         addRule("LoadBalancer", this::toLoadBalancer);
-        addRule("ObjectStorage", "Storage", this::toObjectStorage);
+        addRule("Storage", "ObjectStorage", this::toObjectStorage);
         addRule("SoftwareComponent", this::toSoftwareComponent);
         addRule("WebApplication", this::toWebApplication);
         addRule("WordPress", "WebApplication", this::toWordPress);
         addRule("WebServer", this::toWebServer);
-        addRule("Apache", "WebServer", this::toApache);
-        addRule("Nodejs", "WebServer", this::toNodejs);
+        addRule("WebServer", "Apache", this::toApache);
+        addRule("WebServer", "Nodejs", this::toNodejs);
     }
 
     /**
@@ -76,7 +76,7 @@ class NodeConverter {
      @param conversion the conversion method which is used to construct an (EffectiveModel) node
      */
     private void addRule(String simpleType, BiFunction<String, TNodeTemplate, RootNode> conversion) {
-        addRule(simpleType, null, conversion);
+        addRule(null, simpleType, conversion);
     }
 
     /**
@@ -86,7 +86,7 @@ class NodeConverter {
      @param typePrefix the prefix needed to construct the full type name: {@code tosca.nodes.<typePrefix>.<simpleType>}
      @param conversion {@link #addRule}
      */
-    private void addRule(String simpleType, String typePrefix, BiFunction<String, TNodeTemplate, RootNode> conversion) {
+    private void addRule(String typePrefix, String simpleType, BiFunction<String, TNodeTemplate, RootNode> conversion) {
         Set<String> typeSet = getTypes(simpleType, typePrefix);
         typeSet.forEach(typeName -> conversionMap.put(typeName, conversion));
     }
