@@ -1,5 +1,8 @@
-package org.opentosca.toscana.core.parse.converter.visitor;
+package org.opentosca.toscana.core.parse.converter.visitor.node;
 
+import org.opentosca.toscana.core.parse.converter.visitor.Context;
+import org.opentosca.toscana.core.parse.converter.visitor.ConversionResult;
+import org.opentosca.toscana.core.parse.converter.visitor.ConverterVisitor;
 import org.opentosca.toscana.model.DescribableEntity;
 import org.opentosca.toscana.model.DescribableEntity.DescribableEntityBuilder;
 

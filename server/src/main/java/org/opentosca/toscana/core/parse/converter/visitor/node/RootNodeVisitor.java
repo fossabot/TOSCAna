@@ -1,5 +1,7 @@
-package org.opentosca.toscana.core.parse.converter.visitor;
+package org.opentosca.toscana.core.parse.converter.visitor.node;
 
+import org.opentosca.toscana.core.parse.converter.visitor.Context;
+import org.opentosca.toscana.core.parse.converter.visitor.ConversionResult;
 import org.opentosca.toscana.model.node.RootNode;
 
 import org.eclipse.winery.model.tosca.yaml.TNodeTemplate;

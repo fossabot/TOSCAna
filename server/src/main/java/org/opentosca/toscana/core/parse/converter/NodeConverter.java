@@ -6,11 +6,11 @@ import java.util.Map;
 import java.util.Set;
 import java.util.function.BiFunction;
 
-import org.opentosca.toscana.core.parse.converter.visitor.ContainerRuntimeVisitor;
 import org.opentosca.toscana.core.parse.converter.visitor.Context;
 import org.opentosca.toscana.core.parse.converter.visitor.ConversionResult;
-import org.opentosca.toscana.core.parse.converter.visitor.DescribableVisitor;
-import org.opentosca.toscana.core.parse.converter.visitor.SoftwareComponentVisitor;
+import org.opentosca.toscana.core.parse.converter.visitor.node.ContainerRuntimeVisitor;
+import org.opentosca.toscana.core.parse.converter.visitor.node.DescribableVisitor;
+import org.opentosca.toscana.core.parse.converter.visitor.node.SoftwareComponentVisitor;
 import org.opentosca.toscana.model.DescribableEntity;
 import org.opentosca.toscana.model.DescribableEntity.DescribableEntityBuilder;
 import org.opentosca.toscana.model.node.Apache;

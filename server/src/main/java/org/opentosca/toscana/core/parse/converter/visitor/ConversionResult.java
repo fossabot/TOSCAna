@@ -8,7 +8,7 @@ public class ConversionResult<NodeT> extends AbstractResult<ConversionResult<Nod
     
     private final NodeT node;
     
-    ConversionResult(NodeT node){
+    public ConversionResult(NodeT node){
         this.node = node;
     }
     

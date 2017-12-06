@@ -1,7 +1,9 @@
-package org.opentosca.toscana.core.parse.converter.visitor;
+package org.opentosca.toscana.core.parse.converter.visitor.node;
 
 import java.util.Map;
 
+import org.opentosca.toscana.core.parse.converter.visitor.Context;
+import org.opentosca.toscana.core.parse.converter.visitor.ConversionResult;
 import org.opentosca.toscana.model.datatype.Credential;
 import org.opentosca.toscana.model.node.SoftwareComponent;
 import org.opentosca.toscana.model.node.SoftwareComponent.SoftwareComponentBuilder;
