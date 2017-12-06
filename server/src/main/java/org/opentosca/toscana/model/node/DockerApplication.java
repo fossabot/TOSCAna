@@ -26,23 +26,19 @@ public class DockerApplication extends ContainerApplication {
                               StandardLifecycle standardLifecycle,
                               String description) {
         super(storage, network, nodeName, standardLifecycle, description);
-        this.host = (host == null) ? DockerHostRequirement.builder().build() : host;
-
+        this.host = DockerHostRequirement.getFallback(host);
         requirements.add(this.host);
     }
 
     /**
      @param nodeName {@link #nodeName}
      @param network  {@link #network}
-     @param storage  {@link #storage}
      */
     public static DockerApplicationBuilder builder(String nodeName,
-                                                   EndpointRequirement network,
-                                                   StorageRequirement storage) {
+                                                   EndpointRequirement network) {
         return new DockerApplicationBuilder()
             .nodeName(nodeName)
-            .network(network)
-            .storage(storage);
+            .network(network);
     }
 
     @Override

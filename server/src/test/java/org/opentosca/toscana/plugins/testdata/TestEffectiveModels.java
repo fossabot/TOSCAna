@@ -15,7 +15,6 @@ import org.opentosca.toscana.model.node.ContainerRuntime;
 import org.opentosca.toscana.model.node.DockerApplication;
 import org.opentosca.toscana.model.node.RootNode;
 import org.opentosca.toscana.model.relation.AttachesTo;
-import org.opentosca.toscana.model.relation.HostedOn;
 import org.opentosca.toscana.model.requirement.BlockStorageRequirement;
 import org.opentosca.toscana.model.requirement.DockerHostRequirement;
 import org.opentosca.toscana.model.requirement.EndpointRequirement;
@@ -68,7 +67,7 @@ public class TestEffectiveModels {
             .builder("127.0.0.1", new Port(80))
             .build();
         EndpointRequirement network = EndpointRequirement.
-            builder(endpointCapability, new HostedOn())
+            builder(endpointCapability)
             .build();
         AttachesTo attachesTo = AttachesTo
             .builder("/")
@@ -77,7 +76,7 @@ public class TestEffectiveModels {
             .builder(attachesTo)
             .build();
         DockerApplication simpleTaskApp = DockerApplication
-            .builder("simpleTaskApp", network, storage)
+            .builder("simpleTaskApp", network)
             .host(host)
             .build();
         return new EffectiveModel(Sets.newHashSet(simpleTaskApp, dockerRuntime));
