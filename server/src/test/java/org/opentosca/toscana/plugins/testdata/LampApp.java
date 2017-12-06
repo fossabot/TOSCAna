@@ -46,8 +46,7 @@ public class LampApp {
 
     private Compute createComputeNode() {
         AdminEndpointCapability computeAdminEndpointCap = AdminEndpointCapability
-            .builder("127.0.0.1")
-            .port(new Port(80))
+            .builder("127.0.0.1", new Port(80))
             .build();
         AttachesTo attachesTo = AttachesTo
             .builder("mount")
@@ -103,8 +102,7 @@ public class LampApp {
 
     private MysqlDatabase createMysqlDatabase() {
         DatabaseEndpointCapability dbEndpointCapability = DatabaseEndpointCapability
-            .builder("127.0.0.1")
-            .port(new Port(3306))
+            .builder("127.0.0.1", new Port(3306))
             .build();
         MysqlDatabase mydb = MysqlDatabase
             .builder("my_db", "DBNAME", dbEndpointCapability)
@@ -116,12 +114,10 @@ public class LampApp {
     private Apache createApache() {
         ContainerCapability containerCapability = createContainerCapability();
         DatabaseEndpointCapability apacheEndpoint = DatabaseEndpointCapability
-            .builder("127.0.0.1")
-            .port(new Port(3306))
+            .builder("127.0.0.1", new Port(3306))
             .build();
         AdminEndpointCapability adminEndpointCapability = AdminEndpointCapability
-            .builder("127.0.0.1")
-            .port(new Port(80))
+            .builder("127.0.0.1", new Port(80))
             .build();
 
         Apache webServer = Apache.builder(

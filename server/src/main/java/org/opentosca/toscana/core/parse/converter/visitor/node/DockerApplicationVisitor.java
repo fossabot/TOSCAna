@@ -7,8 +7,9 @@ import org.opentosca.toscana.model.node.DockerApplication.DockerApplicationBuild
 
 import org.eclipse.winery.model.tosca.yaml.TCapabilityAssignment;
 import org.eclipse.winery.model.tosca.yaml.TPropertyAssignment;
+import org.eclipse.winery.model.tosca.yaml.TRequirementAssignment;
 
-public class DockerApplicationVisitor<NodeT extends DockerApplication, BuilderT extends DockerApplicationBuilder> extends RootNodeVisitor<NodeT, BuilderT> {
+public class DockerApplicationVisitor<NodeT extends DockerApplication, BuilderT extends DockerApplicationBuilder> extends ContainerApplicationVisitor<NodeT, BuilderT> {
 
     private static final String ADMIN_CREDENTIAL = "admin_credential";
     private static final String COMPONENT_VERSION = "component_version";
@@ -28,7 +29,8 @@ public class DockerApplicationVisitor<NodeT extends DockerApplication, BuilderT 
     }
 
     @Override
-    public ConversionResult<NodeT> visit(TCapabilityAssignment node, Context<BuilderT> parameter) {
+    public ConversionResult<NodeT> visit(TRequirementAssignment node, Context<BuilderT> parameter) {
         return super.visit(node, parameter);
     }
+    
 }

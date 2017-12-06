@@ -17,7 +17,6 @@ import org.opentosca.toscana.model.visitor.CapabilityVisitor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.Singular;
-import sun.security.krb5.internal.crypto.Des;
 
 /**
  This is the default type that should be used or extended to define a network endpoint capability.
@@ -172,7 +171,7 @@ public class EndpointCapability extends Capability {
     public void accept(CapabilityVisitor v) {
         v.visit(this);
     }
-    
+
     public static class EndpointCapabilityBuilder extends DescribableEntityBuilder {
     }
 }

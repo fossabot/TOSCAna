@@ -10,6 +10,7 @@ import org.opentosca.toscana.core.parse.converter.visitor.Context;
 import org.opentosca.toscana.core.parse.converter.visitor.ConversionResult;
 import org.opentosca.toscana.core.parse.converter.visitor.node.ContainerRuntimeVisitor;
 import org.opentosca.toscana.core.parse.converter.visitor.node.DescribableVisitor;
+import org.opentosca.toscana.core.parse.converter.visitor.node.DockerApplicationVisitor;
 import org.opentosca.toscana.core.parse.converter.visitor.node.SoftwareComponentVisitor;
 import org.opentosca.toscana.model.DescribableEntity;
 import org.opentosca.toscana.model.DescribableEntity.DescribableEntityBuilder;
@@ -22,6 +23,7 @@ import org.opentosca.toscana.model.node.ContainerRuntime.ContainerRuntimeBuilder
 import org.opentosca.toscana.model.node.Database;
 import org.opentosca.toscana.model.node.Dbms;
 import org.opentosca.toscana.model.node.DockerApplication;
+import org.opentosca.toscana.model.node.DockerApplication.DockerApplicationBuilder;
 import org.opentosca.toscana.model.node.LoadBalancer;
 import org.opentosca.toscana.model.node.MysqlDbms;
 import org.opentosca.toscana.model.node.Nodejs;
@@ -112,8 +114,10 @@ class NodeConverter {
         }
     }
 
-    private <NodeT extends DescribableEntity, BuilderT extends DescribableEntityBuilder> NodeT toNode(
-        String name, TNodeTemplate template, Class<BuilderT> builderType, DescribableVisitor visitor) {
+    private <NodeT extends DescribableEntity,
+        BuilderT extends DescribableEntityBuilder,
+        VisitorT extends DescribableVisitor<NodeT, BuilderT>>
+    NodeT toNode( String name, TNodeTemplate template, Class<BuilderT> builderType, VisitorT visitor) {
         Context<BuilderT> context = new Context<>(name, newInstance(builderType));
         ConversionResult<NodeT> result = visitor.visit(template, context);
         return result.getNode();
@@ -159,7 +163,7 @@ class NodeConverter {
     }
 
     private DockerApplication toDockerApplication(String name, TNodeTemplate template) {
-        throw new UnsupportedOperationException();
+        return toNode(name, template, DockerApplicationBuilder.class, new DockerApplicationVisitor());
     }
 
     private LoadBalancer toLoadBalancer(String name, TNodeTemplate template) {
