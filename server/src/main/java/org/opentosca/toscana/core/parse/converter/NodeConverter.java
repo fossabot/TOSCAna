@@ -36,7 +36,6 @@ import org.opentosca.toscana.model.node.WordPress;
 import com.google.common.collect.Sets;
 import org.eclipse.winery.model.tosca.yaml.TNodeTemplate;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  Contains logic to convert TOSCA node templates into nodes of the EffectiveModel
@@ -44,7 +43,7 @@ import org.slf4j.LoggerFactory;
 class NodeConverter {
 
     static final String TOSCA_PREFIX = "tosca.nodes.";
-    private static Logger logger = LoggerFactory.getLogger(NodeConverter.class);
+    private Logger logger;
 
     private Map<String, BiFunction<String, TNodeTemplate, RootNode>> conversionMap = new HashMap<>();
 
@@ -120,7 +119,7 @@ class NodeConverter {
         return result.getNode();
     }
 
-    static <NodeT> NodeT newInstance(Class clazz) {
+    <NodeT> NodeT newInstance(Class clazz) {
         try {
             Constructor<NodeT> constructor = clazz.getDeclaredConstructor();
             constructor.setAccessible(true);
