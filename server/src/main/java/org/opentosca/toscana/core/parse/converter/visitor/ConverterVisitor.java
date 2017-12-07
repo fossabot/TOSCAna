@@ -7,4 +7,5 @@ import org.eclipse.winery.model.tosca.yaml.TNodeTemplate;
 import org.eclipse.winery.model.tosca.yaml.visitor.AbstractVisitor;
 
 public abstract class ConverterVisitor<NodeT extends DescribableEntity, BuilderT extends DescribableEntityBuilder> extends AbstractVisitor<ConversionResult<NodeT>, Context<BuilderT>> {
+
 }

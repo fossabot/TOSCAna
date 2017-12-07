@@ -117,7 +117,7 @@ class NodeConverter {
     private <NodeT extends DescribableEntity,
         BuilderT extends DescribableEntityBuilder,
         VisitorT extends DescribableVisitor<NodeT, BuilderT>>
-    NodeT toNode( String name, TNodeTemplate template, Class<BuilderT> builderType, VisitorT visitor) {
+    NodeT toNode(String name, TNodeTemplate template, Class<BuilderT> builderType, VisitorT visitor) {
         Context<BuilderT> context = new Context<>(name, newInstance(builderType));
         ConversionResult<NodeT> result = visitor.visit(template, context);
         return result.getNode();

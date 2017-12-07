@@ -35,8 +35,8 @@ public class TestEffectiveModels {
             .build();
 
         AdminEndpointCapability computeAdminEndpointCap = AdminEndpointCapability
-            .builder("127.0.0.1")
-            .port(new Port(80)).build();
+            .builder("127.0.0.1", new Port(80))
+            .build();
         AttachesTo attachesTo = AttachesTo
             .builder("mount")
             .build();
