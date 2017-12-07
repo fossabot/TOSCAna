@@ -31,20 +31,19 @@ public class DatabaseEndpointCapability extends EndpointCapability {
                                          Initiator initiator,
                                          @Singular Set<PortSpec> supportedPorts,
                                          String ipAddress,
-                                         @Singular Set<Class<? extends RootNode>> validSourceTypes,
+                                         Set<Class<? extends RootNode>> validSourceTypes,
                                          Range occurence,
                                          String description) {
         super(protocol, port, secure, urlPath, portName, networkName, initiator,
             supportedPorts, ipAddress, validSourceTypes, occurence, description);
     }
 
-
     /**
      @param ipAddress {@link #ipAddress}
      @param port      {@link #port}
      */
     public static DatabaseEndpointCapabilityBuilder builder(String ipAddress,
-                                                          Port port) {
+                                                            Port port) {
         return new DatabaseEndpointCapabilityBuilder()
             .ipAddress(ipAddress)
             .port(port);
@@ -55,17 +54,17 @@ public class DatabaseEndpointCapability extends EndpointCapability {
      @param supportedPort {@link #supportedPorts}
      */
     public static DatabaseEndpointCapabilityBuilder builder(String ipAddress,
-                                                          PortSpec supportedPort) {
+                                                            PortSpec supportedPort) {
         return new DatabaseEndpointCapabilityBuilder()
             .ipAddress(ipAddress)
             .supportedPort(supportedPort);
     }
-    
+
     @Override
     public void accept(CapabilityVisitor v) {
         v.visit(this);
     }
-    
+
     public static class DatabaseEndpointCapabilityBuilder extends EndpointCapabilityBuilder {
     }
 }

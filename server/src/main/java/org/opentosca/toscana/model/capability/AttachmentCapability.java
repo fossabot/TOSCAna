@@ -9,7 +9,6 @@ import org.opentosca.toscana.model.visitor.CapabilityVisitor;
 
 import lombok.Builder;
 import lombok.Data;
-import lombok.Singular;
 
 /**
  Defines an attachment capability of a (logical) infrastructure device node (e.g., {@link BlockStorage} node).
@@ -18,10 +17,14 @@ import lombok.Singular;
 public class AttachmentCapability extends Capability {
 
     @Builder
-    protected AttachmentCapability(@Singular Set<Class<? extends RootNode>> validSourceTypes,
+    protected AttachmentCapability(Set<Class<? extends RootNode>> validSourceTypes,
                                    Range occurence,
                                    String description) {
         super(validSourceTypes, occurence, description);
+    }
+
+    public static AttachmentCapability getFallback(AttachmentCapability c) {
+        return (c == null) ? AttachmentCapability.builder().build() : c;
     }
 
     @Override
@@ -29,10 +32,6 @@ public class AttachmentCapability extends Capability {
         v.visit(this);
     }
 
-    public static AttachmentCapability getFallback(AttachmentCapability c) {
-        return (c == null) ? AttachmentCapability.builder().build() : c;
-    }
-
-    public static class AttachmentCapabilityBuilder extends DescribableEntityBuilder {
+    public static class AttachmentCapabilityBuilder extends CapabilityBuilder {
     }
 }

@@ -8,7 +8,6 @@ import org.opentosca.toscana.model.visitor.CapabilityVisitor;
 
 import lombok.Builder;
 import lombok.Data;
-import lombok.Singular;
 
 /**
  The ContainerCapability indicates that the node can act as a container (or a host) for one or more other declared Node Types.
@@ -22,7 +21,7 @@ public class ContainerCapability extends ComputeCapability {
                                   Double cpuFrequencyInGhz,
                                   Integer diskSizeInMB,
                                   Integer memSizeInMB,
-                                  @Singular Set<Class<? extends RootNode>> validSourceTypes,
+                                  Set<Class<? extends RootNode>> validSourceTypes,
                                   Range occurence,
                                   String description) {
         super(resourceName, numCpus, cpuFrequencyInGhz, diskSizeInMB, memSizeInMB, validSourceTypes, occurence, description);

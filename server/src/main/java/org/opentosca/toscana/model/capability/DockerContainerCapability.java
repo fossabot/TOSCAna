@@ -78,7 +78,7 @@ public class DockerContainerCapability extends ContainerCapability {
                                         Double cpuFrequencyInGhz,
                                         Integer diskSizeInMB,
                                         Integer memSizeInMB,
-                                        @Singular Set<Class<? extends RootNode>> validSourceTypes,
+                                        Set<Class<? extends RootNode>> validSourceTypes,
                                         Range occurence,
                                         String description) {
         super(resourceName, numCpus, cpuFrequencyInGhz, diskSizeInMB, memSizeInMB, validSourceTypes, occurence, description);
@@ -90,10 +90,9 @@ public class DockerContainerCapability extends ContainerCapability {
         this.hostId = hostId;
         this.volumeId = volumeId;
     }
-    
-    public static DockerContainerCapability getFallback(DockerContainerCapability c){
+
+    public static DockerContainerCapability getFallback(DockerContainerCapability c) {
         return (c == null) ? DockerContainerCapability.builder().build() : c;
-        
     }
 
     /**
@@ -114,7 +113,7 @@ public class DockerContainerCapability extends ContainerCapability {
     public void accept(CapabilityVisitor v) {
         v.visit(this);
     }
-   
+
     public static class DockerContainerCapabilityBuilder extends ContainerCapabilityBuilder {
     }
 }

@@ -61,7 +61,7 @@ public class PublicEndpointCapability extends EndpointCapability {
                                        Initiator initiator,
                                        @Singular Set<PortSpec> supportedPorts,
                                        String ipAddress,
-                                       @Singular Set<Class<? extends RootNode>> validSourceTypes,
+                                       Set<Class<? extends RootNode>> validSourceTypes,
                                        Range occurence,
                                        String description) {
         super(protocol, port, secure, urlPath, portName, (networkName != null ? networkName : "PUBLIC"),
@@ -71,13 +71,6 @@ public class PublicEndpointCapability extends EndpointCapability {
         }
         this.floating = floating;
         this.dnsName = dnsName;
-    }
-
-    /**
-     @return {@link #dnsName}
-     */
-    public Optional<String> getDnsName() {
-        return Optional.ofNullable(dnsName);
     }
 
     /**
@@ -100,6 +93,13 @@ public class PublicEndpointCapability extends EndpointCapability {
         return new PublicEndpointCapabilityBuilder()
             .ipAddress(ipAddress)
             .supportedPort(supportedPort);
+    }
+
+    /**
+     @return {@link #dnsName}
+     */
+    public Optional<String> getDnsName() {
+        return Optional.ofNullable(dnsName);
     }
 
     @Override

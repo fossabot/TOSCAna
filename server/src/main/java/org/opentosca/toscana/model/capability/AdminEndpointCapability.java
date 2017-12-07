@@ -34,7 +34,7 @@ public class AdminEndpointCapability extends EndpointCapability {
                                       Initiator initiator,
                                       @Singular Set<PortSpec> supportedPorts,
                                       String ipAddress,
-                                      @Singular Set<Class<? extends RootNode>> validSourceTypes,
+                                      Set<Class<? extends RootNode>> validSourceTypes,
                                       Range occurence,
                                       String description) {
         super(protocol, port, true, urlPath, portName, networkName, initiator,

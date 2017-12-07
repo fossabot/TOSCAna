@@ -7,6 +7,7 @@ import org.opentosca.toscana.model.operation.StandardLifecycle;
 import org.opentosca.toscana.model.requirement.HostRequirement;
 import org.opentosca.toscana.model.visitor.NodeVisitor;
 
+import lombok.Builder;
 import lombok.Data;
 
 /**
@@ -30,6 +31,7 @@ public class SoftwareComponent extends RootNode {
 
     private final HostRequirement host;
 
+    @Builder
     protected SoftwareComponent(String componentVersion,
                                 Credential adminCredential,
                                 HostRequirement host,
@@ -64,7 +66,7 @@ public class SoftwareComponent extends RootNode {
     public void accept(NodeVisitor v) {
         v.visit(this);
     }
-    
+
     public static class SoftwareComponentBuilder extends RootNodeBuilder {
         private String componentVersion;
         private Credential adminCredential;
@@ -119,3 +121,4 @@ public class SoftwareComponent extends RootNode {
         }
     }
 }
+

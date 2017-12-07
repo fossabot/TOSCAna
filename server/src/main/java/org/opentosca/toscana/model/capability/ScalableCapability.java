@@ -9,7 +9,6 @@ import org.opentosca.toscana.model.visitor.CapabilityVisitor;
 
 import lombok.Builder;
 import lombok.Data;
-import lombok.Singular;
 
 import static java.lang.String.format;
 
@@ -39,7 +38,7 @@ public class ScalableCapability extends Capability {
     @Builder
     protected ScalableCapability(Range scaleRange,
                                  Integer defaultInstances,
-                                 @Singular Set<Class<? extends RootNode>> validSourceTypes,
+                                 Set<Class<? extends RootNode>> validSourceTypes,
                                  Range occurence,
                                  String description) {
         super(validSourceTypes, occurence, description);
@@ -64,6 +63,6 @@ public class ScalableCapability extends Capability {
         v.visit(this);
     }
 
-    public static class ScalableCapabilityBuilder extends DescribableEntityBuilder {
+    public static class ScalableCapabilityBuilder extends CapabilityBuilder {
     }
 }
