@@ -64,21 +64,8 @@ public class TestEffectiveModels {
             .builder()
             .fulfiller(dockerRuntime)
             .build();
-        EndpointCapability endpointCapability = EndpointCapability
-            .builder("127.0.0.1", new Port(80))
-            .build();
-        EndpointRequirement network = EndpointRequirement.
-            builder()
-            .capability(endpointCapability)
-            .build();
-        AttachesTo attachesTo = AttachesTo
-            .builder("/")
-            .build();
-        StorageRequirement storage = StorageRequirement
-            .builder((RootRelationship) attachesTo)
-            .build();
         DockerApplication simpleTaskApp = DockerApplication
-            .builder("simpleTaskApp", network)
+            .builder("simpleTaskApp")
             .host(host)
             .build();
         return new EffectiveModel(Sets.newHashSet(simpleTaskApp, dockerRuntime));

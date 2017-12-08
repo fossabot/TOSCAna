@@ -14,6 +14,7 @@ import org.opentosca.toscana.model.datatype.NetworkInfo;
 import org.opentosca.toscana.model.datatype.PortInfo;
 import org.opentosca.toscana.model.operation.StandardLifecycle;
 import org.opentosca.toscana.model.requirement.BlockStorageRequirement;
+import org.opentosca.toscana.model.requirement.StorageRequirement;
 import org.opentosca.toscana.model.visitor.NodeVisitor;
 
 import lombok.Builder;
@@ -98,7 +99,7 @@ public class Compute extends RootNode {
     /**
      @param nodeName      {@link #nodeName}
      @param adminEndpoint {@link #adminEndpoint}
-     @param localStorage  {@link #localStorage}
+     @param localStorage {@link #localStorage}
      */
     public static ComputeBuilder builder(String nodeName,
                                          OsCapability os,

@@ -19,10 +19,6 @@ public class DockerApplicationVisitor<NodeT extends DockerApplication, BuilderT 
 
     @Override
     public ConversionResult<NodeT> visit(TNodeTemplate node, Context<BuilderT> parameter) {
-        for (TMapRequirementAssignment requirementMap : node.getRequirements()){
-            requirementMap.getMap();
-            break;
-        }
         return super.visit(node, parameter);
     }
 

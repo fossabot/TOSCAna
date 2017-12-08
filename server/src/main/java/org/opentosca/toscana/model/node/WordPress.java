@@ -40,7 +40,7 @@ public class WordPress extends WebApplication {
         this.adminUser = Objects.requireNonNull(adminUser);
         this.adminPassword = Objects.requireNonNull(adminPassword);
         this.dbHost = Objects.requireNonNull(dbHost);
-        this.databaseEndpoint = databaseEndpoint;
+        this.databaseEndpoint = DatabaseEndpointRequirement.getFallback(databaseEndpoint);
 
         requirements.add(this.databaseEndpoint);
     }
@@ -50,24 +50,18 @@ public class WordPress extends WebApplication {
      @param adminUser        {@link #adminUser}
      @param adminPassword    {@link #adminPassword}
      @param dbHost           {@link #dbHost}
-     @param databaseEndpoint {@link #databaseEndpoint}
      @param endpoint         {@link WebApplication#appEndpoint}
-     @param host             {@link #host}
      */
     public static WordPressBuilder builder(String nodeName,
                                            String adminUser,
                                            String adminPassword,
                                            String dbHost,
-                                           DatabaseEndpointRequirement databaseEndpoint,
-                                           EndpointCapability endpoint,
-                                           WebServerRequirement host) {
+                                           EndpointCapability endpoint){
         return (WordPressBuilder) new WordPressBuilder()
             .nodeName(nodeName)
-            .host(host)
             .adminUser(adminUser)
             .adminPassword(adminPassword)
             .dbHost(dbHost)
-            .databaseEndpoint(databaseEndpoint)
             .endpoint(endpoint);
     }
 

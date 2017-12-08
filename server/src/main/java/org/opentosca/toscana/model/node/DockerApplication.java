@@ -32,13 +32,10 @@ public class DockerApplication extends ContainerApplication {
 
     /**
      @param nodeName {@link #nodeName}
-     @param network  {@link #network}
      */
-    public static DockerApplicationBuilder builder(String nodeName,
-                                                   EndpointRequirement network) {
+    public static DockerApplicationBuilder builder(String nodeName) {
         return new DockerApplicationBuilder()
-            .nodeName(nodeName)
-            .network(network);
+            .nodeName(nodeName);
     }
 
     @Override

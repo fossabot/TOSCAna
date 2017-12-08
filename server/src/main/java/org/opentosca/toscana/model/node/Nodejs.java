@@ -37,19 +37,16 @@ public class Nodejs extends WebServer {
 
     /**
      @param nodeName      {@link #nodeName}
-     @param host          {@link #host}
      @param containerHost {@link #containerHost}
      @param dataEndpoint  {@link #dataEndpoint}
      @param adminEndpoint {@link #adminEndpoint}
      */
     public static NodejsBuilder builder(String nodeName,
-                                        HostRequirement host,
                                         ContainerCapability containerHost,
                                         EndpointCapability dataEndpoint,
                                         AdminEndpointCapability adminEndpoint) {
         return new NodejsBuilder()
             .nodeName(nodeName)
-            .host(host)
             .containerHost(containerHost)
             .dataEndpoint(dataEndpoint)
             .adminEndpoint(adminEndpoint);

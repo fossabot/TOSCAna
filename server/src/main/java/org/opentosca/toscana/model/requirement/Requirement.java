@@ -33,14 +33,14 @@ public class Requirement<CapabilityT extends Capability, NodeT extends RootNode,
      <p>
      Note: Defaults to {@link Range#EXACTLY_ONCE}
      */
-    protected final Range occurrence;
+    protected Range occurrence;
     /**
      The Relationship to construct when fulfilling the requirement.
      (TOSCA Simple Profile in YAML Version 1.1, p. 85)
      */
     protected final RelationshipT relationship;
     /**
-     Capability that can fulfill this requirement.
+     The optional Capability that can fulfill this requirement.
      (TOSCA Simple Profile in YAML Version 1.1, p. 85)
      */
     protected CapabilityT capability;

@@ -49,7 +49,8 @@ public class WebApplication extends RootNode {
      @param nodeName {@link #nodeName}
      @param endpoint {@link #appEndpoint}
      */
-    public static WebApplicationBuilder builder(String nodeName, EndpointCapability endpoint) {
+    public static WebApplicationBuilder builder(String nodeName, 
+                                                EndpointCapability endpoint) {
         return new WebApplicationBuilder()
             .nodeName(nodeName)
             .endpoint(endpoint);
