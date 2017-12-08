@@ -174,7 +174,4 @@ public class EndpointCapability extends Capability {
 
     public static class EndpointCapabilityBuilder extends CapabilityBuilder {
     }
-
-    public static class EndpointCapabilityBuilder extends DescribableEntityBuilder {
-    }
 }

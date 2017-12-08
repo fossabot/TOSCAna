@@ -26,4 +26,7 @@ public class BlockStorageRequirement extends Requirement<AttachmentCapability, B
         return new BlockStorageRequirementBuilder()
             .relationship(relationship);
     }
+
+    public static class BlockStorageRequirementBuilder extends RequirementBuilder<AttachmentCapability, BlockStorage, AttachesTo> {
+    }
 }

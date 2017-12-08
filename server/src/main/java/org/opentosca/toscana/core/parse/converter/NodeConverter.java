@@ -64,7 +64,7 @@ class NodeConverter {
         addRule("Storage", "ObjectStorage", this::toObjectStorage);
         addRule("SoftwareComponent", this::toSoftwareComponent);
         addRule("WebApplication", this::toWebApplication);
-        addRule("WordPress", "WebApplication", this::toWordPress);
+        addRule("WebApplication", "WordPress", this::toWordPress);
         addRule("WebServer", this::toWebServer);
         addRule("WebServer", "Apache", this::toApache);
         addRule("WebServer", "Nodejs", this::toNodejs);

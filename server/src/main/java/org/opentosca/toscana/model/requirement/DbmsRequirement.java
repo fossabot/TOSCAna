@@ -22,10 +22,11 @@ public class DbmsRequirement extends Requirement<ContainerCapability, Dbms, Host
         super(capability, occurrence, fulfillers, relationship);
     }
 
-    public static DbmsRequirementBuilder builder(ContainerCapability capability,
-                                                 HostedOn relationship) {
+    public static DbmsRequirementBuilder builder(HostedOn relationship) {
         return new DbmsRequirementBuilder()
-            .capability(capability)
             .relationship(relationship);
+    }
+
+    public static class DbmsRequirementBuilder extends RequirementBuilder<ContainerCapability, Dbms, HostedOn> {
     }
 }

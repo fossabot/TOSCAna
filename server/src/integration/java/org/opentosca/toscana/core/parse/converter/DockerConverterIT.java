@@ -17,5 +17,6 @@ public class DockerConverterIT {
         CsarParseService parser = new CsarParseServiceImpl();
 
         EffectiveModel model = parser.parse(TestCsars.VALID_MINIMAL_DOCKER_TEMPLATE);
+        // TODO 
     }
 }

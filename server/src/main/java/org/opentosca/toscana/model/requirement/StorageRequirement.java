@@ -29,6 +29,9 @@ public class StorageRequirement extends Requirement<StorageCapability, RootNode,
     }
 
     public static StorageRequirement getFallback(StorageRequirement s) {
-        return (s == null) ? StorageRequirement.builder(new DependsOn()).build() : s;
+        return (s == null) ? StorageRequirement.builder((RootRelationship) new DependsOn()).build() : s;
+    }
+
+    public static class StorageRequirementBuilder extends RequirementBuilder<StorageCapability, RootNode, RootRelationship> {
     }
 }

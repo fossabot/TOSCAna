@@ -65,37 +65,10 @@ public abstract class RootNode extends DescribableEntity implements VisitableNod
 
     public static class RootNodeBuilder extends DescribableEntityBuilder {
 
-        private String nodeName;
-        private StandardLifecycle standardLifecycle;
-        private String description;
-
-        RootNodeBuilder() {
-        }
-
         @Override
         public RootNode build() {
             // should never be called (RootNode is abstract)
             throw new UnsupportedOperationException();
         }
-
-        public RootNodeBuilder nodeName(String nodeName) {
-            this.nodeName = nodeName;
-            return this;
-        }
-
-        public RootNodeBuilder standardLifecycle(StandardLifecycle standardLifecycle) {
-            this.standardLifecycle = standardLifecycle;
-            return this;
-        }
-
-        @Override
-        public RootNodeBuilder description(String description) {
-            this.description = description;
-            return this;
-        }
-
-        public String toString() {
-            return "RootNode.RootNodeBuilder(nodeName=" + this.nodeName + ", standardLifecycle=" + this.standardLifecycle + ", description=" + this.description + ")";
-        }
-    }
+   }
 }

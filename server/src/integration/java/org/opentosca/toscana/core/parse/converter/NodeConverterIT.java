@@ -38,6 +38,8 @@ public class NodeConverterIT extends BaseIntegrationTest {
                 logger.info("Node Type '{}': known", nodeType);
             } catch (UnsupportedOperationException e) {
                 logger.info("Node Type '{}': known (not yet supported)", nodeType);
+            } catch (NullPointerException e){
+                // ignore
             } finally {
                 System.out.println();
             }

@@ -22,4 +22,7 @@ public class MysqlDbmsRequirement extends Requirement<ContainerCapability, Mysql
         super(ContainerCapability.getFallback(capability), occurrence,
             fulfillers, HostedOn.getFallback(relationship));
     }
+
+    public static class MysqlDbmsRequirementBuilder extends RequirementBuilder<ContainerCapability, MysqlDbms, HostedOn> {
+    }
 }

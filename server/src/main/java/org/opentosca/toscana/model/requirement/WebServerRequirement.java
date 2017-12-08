@@ -21,4 +21,7 @@ public class WebServerRequirement extends Requirement<ContainerCapability, WebSe
                                    HostedOn relationship) {
         super(ContainerCapability.getFallback(capability), occurrence, fulfillers, HostedOn.getFallback(relationship));
     }
+
+    public static class WebServerRequirementBuilder extends RequirementBuilder<ContainerCapability, WebServer, HostedOn> {
+    }
 }
