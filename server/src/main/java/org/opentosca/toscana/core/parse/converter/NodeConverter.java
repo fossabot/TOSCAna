@@ -8,33 +8,61 @@ import java.util.function.BiFunction;
 
 import org.opentosca.toscana.core.parse.converter.visitor.ConversionResult;
 import org.opentosca.toscana.core.parse.converter.visitor.NodeContext;
+import org.opentosca.toscana.core.parse.converter.visitor.node.ApacheVisitor;
+import org.opentosca.toscana.core.parse.converter.visitor.node.BlockStorageVisitor;
+import org.opentosca.toscana.core.parse.converter.visitor.node.ComputeVisitor;
+import org.opentosca.toscana.core.parse.converter.visitor.node.ContainerApplicationVisitor;
 import org.opentosca.toscana.core.parse.converter.visitor.node.ContainerRuntimeVisitor;
+import org.opentosca.toscana.core.parse.converter.visitor.node.DatabaseVisitor;
+import org.opentosca.toscana.core.parse.converter.visitor.node.DbmsVisitor;
 import org.opentosca.toscana.core.parse.converter.visitor.node.DescribableVisitor;
 import org.opentosca.toscana.core.parse.converter.visitor.node.DockerApplicationVisitor;
+import org.opentosca.toscana.core.parse.converter.visitor.node.LoadBalancerVisitor;
+import org.opentosca.toscana.core.parse.converter.visitor.node.MysqlDatabaseVisitor;
+import org.opentosca.toscana.core.parse.converter.visitor.node.MysqlDbmsVisitor;
+import org.opentosca.toscana.core.parse.converter.visitor.node.NodejsVisitor;
+import org.opentosca.toscana.core.parse.converter.visitor.node.ObjectStorageVisitor;
 import org.opentosca.toscana.core.parse.converter.visitor.node.SoftwareComponentVisitor;
+import org.opentosca.toscana.core.parse.converter.visitor.node.WebApplicationVisitor;
+import org.opentosca.toscana.core.parse.converter.visitor.node.WebServerVisitor;
+import org.opentosca.toscana.core.parse.converter.visitor.node.WordPressVisitor;
 import org.opentosca.toscana.model.DescribableEntity;
 import org.opentosca.toscana.model.DescribableEntity.DescribableEntityBuilder;
 import org.opentosca.toscana.model.artifact.Repository;
 import org.opentosca.toscana.model.node.Apache;
+import org.opentosca.toscana.model.node.Apache.ApacheBuilder;
 import org.opentosca.toscana.model.node.BlockStorage;
+import org.opentosca.toscana.model.node.BlockStorage.BlockStorageBuilder;
 import org.opentosca.toscana.model.node.Compute;
+import org.opentosca.toscana.model.node.Compute.ComputeBuilder;
 import org.opentosca.toscana.model.node.ContainerApplication;
+import org.opentosca.toscana.model.node.ContainerApplication.ContainerApplicationBuilder;
 import org.opentosca.toscana.model.node.ContainerRuntime;
 import org.opentosca.toscana.model.node.ContainerRuntime.ContainerRuntimeBuilder;
 import org.opentosca.toscana.model.node.Database;
+import org.opentosca.toscana.model.node.Database.DatabaseBuilder;
 import org.opentosca.toscana.model.node.Dbms;
+import org.opentosca.toscana.model.node.Dbms.DbmsBuilder;
 import org.opentosca.toscana.model.node.DockerApplication;
 import org.opentosca.toscana.model.node.DockerApplication.DockerApplicationBuilder;
 import org.opentosca.toscana.model.node.LoadBalancer;
+import org.opentosca.toscana.model.node.LoadBalancer.LoadBalancerBuilder;
+import org.opentosca.toscana.model.node.MysqlDatabase;
 import org.opentosca.toscana.model.node.MysqlDbms;
+import org.opentosca.toscana.model.node.MysqlDbms.MysqlDbmsBuilder;
 import org.opentosca.toscana.model.node.Nodejs;
+import org.opentosca.toscana.model.node.Nodejs.NodejsBuilder;
 import org.opentosca.toscana.model.node.ObjectStorage;
+import org.opentosca.toscana.model.node.ObjectStorage.ObjectStorageBuilder;
 import org.opentosca.toscana.model.node.RootNode;
 import org.opentosca.toscana.model.node.SoftwareComponent;
 import org.opentosca.toscana.model.node.SoftwareComponent.SoftwareComponentBuilder;
 import org.opentosca.toscana.model.node.WebApplication;
+import org.opentosca.toscana.model.node.WebApplication.WebApplicationBuilder;
 import org.opentosca.toscana.model.node.WebServer;
+import org.opentosca.toscana.model.node.WebServer.WebServerBuilder;
 import org.opentosca.toscana.model.node.WordPress;
+import org.opentosca.toscana.model.node.WordPress.WordPressBuilder;
 
 import com.google.common.collect.Sets;
 import org.eclipse.winery.model.tosca.yaml.TNodeTemplate;
@@ -137,19 +165,19 @@ class NodeConverter {
     }
 
     private Apache toApache(String name, TNodeTemplate template) {
-        throw new UnsupportedOperationException();
+        return toNode(name, template, ApacheBuilder.class, new ApacheVisitor());
     }
 
     private BlockStorage toBlockStorage(String name, TNodeTemplate template) {
-        throw new UnsupportedOperationException();
+        return toNode(name, template, BlockStorageBuilder.class, new BlockStorageVisitor<>());
     }
 
     private Compute toCompute(String name, TNodeTemplate template) {
-        throw new UnsupportedOperationException();
+        return toNode(name, template, ComputeBuilder.class, new ComputeVisitor<>());
     }
 
     private ContainerApplication toContainerApplication(String name, TNodeTemplate template) {
-        throw new UnsupportedOperationException();
+        return toNode(name, template, ContainerApplicationBuilder.class, new ContainerApplicationVisitor<>());
     }
 
     private ContainerRuntime toContainerRuntime(String name, TNodeTemplate template) {
@@ -157,11 +185,11 @@ class NodeConverter {
     }
 
     private Database toDatabase(String name, TNodeTemplate template) {
-        throw new UnsupportedOperationException();
+        return toNode(name, template, DatabaseBuilder.class, new DatabaseVisitor());
     }
 
     private Dbms toDbms(String name, TNodeTemplate template) {
-        throw new UnsupportedOperationException();
+        return toNode(name, template, DbmsBuilder.class, new DbmsVisitor<>());
     }
 
     private DockerApplication toDockerApplication(String name, TNodeTemplate template) {
@@ -169,19 +197,19 @@ class NodeConverter {
     }
 
     private LoadBalancer toLoadBalancer(String name, TNodeTemplate template) {
-        throw new UnsupportedOperationException();
+        return toNode(name, template, LoadBalancerBuilder.class, new LoadBalancerVisitor<>());
     }
 
     private MysqlDbms toMysqlDbms(String name, TNodeTemplate template) {
-        throw new UnsupportedOperationException();
+        return toNode(name, template, MysqlDbmsBuilder.class, new MysqlDbmsVisitor<>());
     }
 
     private Nodejs toNodejs(String name, TNodeTemplate template) {
-        throw new UnsupportedOperationException();
+        return toNode(name, template, NodejsBuilder.class, new NodejsVisitor<>());
     }
 
     private ObjectStorage toObjectStorage(String name, TNodeTemplate template) {
-        throw new UnsupportedOperationException();
+        return toNode(name, template, ObjectStorageBuilder.class, new ObjectStorageVisitor<>());
     }
 
     private SoftwareComponent toSoftwareComponent(String name, TNodeTemplate template) {
@@ -189,14 +217,14 @@ class NodeConverter {
     }
 
     private WebApplication toWebApplication(String name, TNodeTemplate template) {
-        throw new UnsupportedOperationException();
+        return toNode(name, template, WebApplicationBuilder.class, new WebApplicationVisitor());
     }
 
     private WebServer toWebServer(String name, TNodeTemplate template) {
-        throw new UnsupportedOperationException();
+        return toNode(name, template, WebServerBuilder.class, new WebServerVisitor());
     }
 
     private WordPress toWordPress(String name, TNodeTemplate template) {
-        throw new UnsupportedOperationException();
+        return toNode(name, template, WordPressBuilder.class, new WordPressVisitor());
     }
 }
