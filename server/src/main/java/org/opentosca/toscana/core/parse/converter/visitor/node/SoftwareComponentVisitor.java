@@ -2,8 +2,8 @@ package org.opentosca.toscana.core.parse.converter.visitor.node;
 
 import java.util.Map;
 
-import org.opentosca.toscana.core.parse.converter.visitor.Context;
 import org.opentosca.toscana.core.parse.converter.visitor.ConversionResult;
+import org.opentosca.toscana.core.parse.converter.visitor.NodeContext;
 import org.opentosca.toscana.model.datatype.Credential;
 import org.opentosca.toscana.model.node.SoftwareComponent;
 import org.opentosca.toscana.model.node.SoftwareComponent.SoftwareComponentBuilder;
@@ -17,7 +17,7 @@ public class SoftwareComponentVisitor<NodeT extends SoftwareComponent, BuilderT 
     private static final String COMPONENT_VERSION = "component_version";
 
     @Override
-    public ConversionResult<NodeT> visit(TPropertyAssignment node, Context<BuilderT> parameter) {
+    public ConversionResult<NodeT> visit(TPropertyAssignment node, NodeContext<BuilderT> parameter) {
         BuilderT builder = parameter.getNodeBuilder();
         Object value = node.getValue();
         switch (parameter.getKey()) {
@@ -42,7 +42,7 @@ public class SoftwareComponentVisitor<NodeT extends SoftwareComponent, BuilderT 
     }
 
     @Override
-    public ConversionResult<NodeT> visit(TCapabilityAssignment node, Context<BuilderT> parameter) {
+    public ConversionResult<NodeT> visit(TCapabilityAssignment node, NodeContext<BuilderT> parameter) {
         return super.visit(node, parameter);
     }
 }

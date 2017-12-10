@@ -1,11 +1,12 @@
 package org.opentosca.toscana.core.parse.converter;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
+import org.eclipse.winery.yaml.common.validator.support.Parameter;
+import org.opentosca.toscana.core.parse.converter.visitor.RepositoryVisitor;
+import org.opentosca.toscana.core.parse.converter.visitor.SimpleContext;
 import org.opentosca.toscana.model.EffectiveModel;
+import org.opentosca.toscana.model.artifact.Repository;
 import org.opentosca.toscana.model.node.RootNode;
 
 import org.eclipse.winery.model.tosca.yaml.TNodeTemplate;
@@ -26,8 +27,16 @@ public class ModelConverter {
 
     public EffectiveModel convert(TServiceTemplate serviceTemplate) throws UnknownNodeTypeException {
         logger.debug("Convert service template to normative model");
+        List<Repository> repositories = getRepositories(serviceTemplate);
         Set<RootNode> nodes = convertNodeTemplates(serviceTemplate.getTopologyTemplate());
         return new EffectiveModel(nodes);
+    }
+
+    private List<Repository> getRepositories(TServiceTemplate serviceTemplate) {
+       RepositoryVisitor visitor = new RepositoryVisitor(logger);
+       List<Repository> repositories = visitor.visit(serviceTemplate, new SimpleContext("test")).get();
+        System.out.println(repositories);
+        return repositories;
     }
 
     private Set<RootNode> convertNodeTemplates(TTopologyTemplateDefinition topology) throws UnknownNodeTypeException {

@@ -6,8 +6,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.function.BiFunction;
 
-import org.opentosca.toscana.core.parse.converter.visitor.Context;
 import org.opentosca.toscana.core.parse.converter.visitor.ConversionResult;
+import org.opentosca.toscana.core.parse.converter.visitor.NodeContext;
 import org.opentosca.toscana.core.parse.converter.visitor.node.ContainerRuntimeVisitor;
 import org.opentosca.toscana.core.parse.converter.visitor.node.DescribableVisitor;
 import org.opentosca.toscana.core.parse.converter.visitor.node.DockerApplicationVisitor;
@@ -117,9 +117,9 @@ class NodeConverter {
     private <NodeT extends DescribableEntity, BuilderT extends DescribableEntityBuilder,
         VisitorT extends DescribableVisitor<NodeT, BuilderT>>
     NodeT toNode(String name, TNodeTemplate template, Class<BuilderT> builderType, VisitorT visitor) {
-        Context<BuilderT> context = new Context<>(name, newInstance(builderType));
+        NodeContext<BuilderT> context = new NodeContext<>(name, newInstance(builderType));
         ConversionResult<NodeT> result = visitor.visit(template, context);
-        return result.getNode();
+        return result.getResult();
     }
 
     <NodeT> NodeT newInstance(Class clazz) {

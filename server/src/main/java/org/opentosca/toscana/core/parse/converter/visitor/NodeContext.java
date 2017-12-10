@@ -1,27 +1,25 @@
 package org.opentosca.toscana.core.parse.converter.visitor;
 
+import org.eclipse.winery.model.tosca.yaml.visitor.AbstractParameter;
 import org.opentosca.toscana.model.DescribableEntity.DescribableEntityBuilder;
 
-import org.apache.commons.lang.SerializationUtils;
-import org.eclipse.winery.model.tosca.yaml.visitor.AbstractParameter;
-
-public class Context<NodeBuilderT extends DescribableEntityBuilder> extends AbstractParameter<Context<NodeBuilderT>> {
+public class NodeContext<NodeBuilderT extends DescribableEntityBuilder> extends AbstractParameter<NodeContext<NodeBuilderT>> {
 
     private final String nodeName;
     private final NodeBuilderT nodeBuilder;
 
-    public Context(String name, NodeBuilderT node) {
+    public NodeContext(String name, NodeBuilderT node) {
         this.nodeName = name;
         this.nodeBuilder = node;
     }
 
     @Override
-    public Context copy() {
+    public NodeContext copy() {
         return this;
     }
 
     @Override
-    public Context self() {
+    public NodeContext self() {
         return this;
     }
 

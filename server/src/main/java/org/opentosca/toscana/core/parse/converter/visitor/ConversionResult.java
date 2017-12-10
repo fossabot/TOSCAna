@@ -1,15 +1,13 @@
 package org.opentosca.toscana.core.parse.converter.visitor;
 
-import org.opentosca.toscana.model.node.RootNode;
-
 import org.eclipse.winery.model.tosca.yaml.visitor.AbstractResult;
 
-public class ConversionResult<NodeT> extends AbstractResult<ConversionResult<NodeT>> {
+public class ConversionResult<R> extends AbstractResult<ConversionResult<R>> {
     
-    private final NodeT node;
+    private final R result;
     
-    public ConversionResult(NodeT node){
-        this.node = node;
+    public ConversionResult(R result){
+        this.result = result;
     }
     
     // dunno how we need this. lets see
@@ -18,7 +16,7 @@ public class ConversionResult<NodeT> extends AbstractResult<ConversionResult<Nod
         return this;
     }
     
-    public NodeT getNode(){
-        return node;
+    public R getResult(){
+        return result;
     }
 }

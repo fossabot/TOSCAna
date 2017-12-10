@@ -1,7 +1,7 @@
 package org.opentosca.toscana.core.parse.converter.visitor.node;
 
-import org.opentosca.toscana.core.parse.converter.visitor.Context;
 import org.opentosca.toscana.core.parse.converter.visitor.ConversionResult;
+import org.opentosca.toscana.core.parse.converter.visitor.NodeContext;
 import org.opentosca.toscana.model.node.ContainerRuntime;
 import org.opentosca.toscana.model.node.ContainerRuntime.ContainerRuntimeBuilder;
 
@@ -13,7 +13,7 @@ public class ContainerRuntimeVisitor<NodeT extends ContainerRuntime, BuilderT ex
     private static final String COMPONENT_VERSION = "component_version";
 
     @Override
-    public ConversionResult<NodeT> visit(TPropertyAssignment node, Context<BuilderT> parameter) {
+    public ConversionResult<NodeT> visit(TPropertyAssignment node, NodeContext<BuilderT> parameter) {
         BuilderT builder = parameter.getNodeBuilder();
         Object value = node.getValue();
         switch (parameter.getKey()) {
