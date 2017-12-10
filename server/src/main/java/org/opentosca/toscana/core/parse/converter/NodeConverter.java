@@ -14,6 +14,7 @@ import org.opentosca.toscana.core.parse.converter.visitor.node.DockerApplication
 import org.opentosca.toscana.core.parse.converter.visitor.node.SoftwareComponentVisitor;
 import org.opentosca.toscana.model.DescribableEntity;
 import org.opentosca.toscana.model.DescribableEntity.DescribableEntityBuilder;
+import org.opentosca.toscana.model.artifact.Repository;
 import org.opentosca.toscana.model.node.Apache;
 import org.opentosca.toscana.model.node.BlockStorage;
 import org.opentosca.toscana.model.node.Compute;
@@ -45,11 +46,13 @@ import org.slf4j.Logger;
 class NodeConverter {
 
     static final String TOSCA_PREFIX = "tosca.nodes.";
-    private Logger logger;
+    private final Set<Repository> repositories;
+    private final Logger logger;
 
     private Map<String, BiFunction<String, TNodeTemplate, RootNode>> conversionMap = new HashMap<>();
 
-    NodeConverter(Logger logger) {
+    NodeConverter(Set<Repository> repositories, Logger logger) {
+        this.repositories = repositories;
         this.logger = logger;
         addRule("Compute", this::toCompute);
         addRule("Container.Application", this::toContainerApplication);
@@ -117,7 +120,7 @@ class NodeConverter {
     private <NodeT extends DescribableEntity, BuilderT extends DescribableEntityBuilder,
         VisitorT extends DescribableVisitor<NodeT, BuilderT>>
     NodeT toNode(String name, TNodeTemplate template, Class<BuilderT> builderType, VisitorT visitor) {
-        NodeContext<BuilderT> context = new NodeContext<>(name, newInstance(builderType));
+        NodeContext<BuilderT> context = new NodeContext<>(name, newInstance(builderType), repositories);
         ConversionResult<NodeT> result = visitor.visit(template, context);
         return result.getResult();
     }

@@ -29,7 +29,7 @@ public class CredentialConverter {
                 wineryCredential.getTokenType(),
                 Credential.TokenType.values(),
                 e);
-            // TODO throw something more precize, e.g. IllegalServiceTemplateException
+            // TODO throw something more precise, e.g. IllegalServiceTemplateException
             throw new IllegalArgumentException();
         }
     }

@@ -9,7 +9,7 @@ import org.slf4j.Logger;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-public class RepositoryVisitor extends AbstractVisitor<ListResult<Repository>, Parameter> {
+public class RepositoryVisitor extends AbstractVisitor<SetResult<Repository>, Parameter> {
 
     private final Logger logger;
 
@@ -19,7 +19,7 @@ public class RepositoryVisitor extends AbstractVisitor<ListResult<Repository>, P
 
 
     @Override
-    public ListResult<Repository> visit(TRepositoryDefinition node, Parameter parameter) {
+    public SetResult<Repository> visit(TRepositoryDefinition node, Parameter parameter) {
         String name = parameter.getKey();
         try {
             URL url = new URL(node.getUrl());
@@ -28,7 +28,7 @@ public class RepositoryVisitor extends AbstractVisitor<ListResult<Repository>, P
 //                .credential()
                 .description(node.getDescription())
                 .build();
-            return new ListResult<>(repository);
+            return new SetResult<>(repository);
         } catch (MalformedURLException e) {
             logger.error("Encountered malformed URL in repository definition '{}'", name, e);
             // TODO throw something meaningful

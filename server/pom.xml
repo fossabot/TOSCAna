@@ -81,7 +81,7 @@
         <dependency>
             <groupId>com.github.stupro-toscana.winery</groupId>
             <artifactId>org.eclipse.winery.yaml.common</artifactId>
-            <version>3ea0caa53b40c5e885b904ffb52ce68f67aa1ef0</version>
+            <version>c25e342e849cb4d86722e986021ff53fc99e5b01</version>
         </dependency>
         <!--<dependency>-->
         <!--<groupId>com.github.eclipse.winery</groupId>-->
