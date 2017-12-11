@@ -23,4 +23,11 @@ public class KubernetesPluginTest extends BaseUnitTest {
             = TestUtil.setUpMockTransformationContext(TestEffectiveModels.getSingleComputeNodeModel());
         plugin.transform(context);
     }
+
+    @Test
+    public void transformTest() throws Exception {
+        TransformationContext context
+            = TestUtil.setUpMockTransformationContext(TestEffectiveModels.getMinimalDockerModel());
+        plugin.transform(context);
+    }
 }

@@ -5,23 +5,32 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 import org.opentosca.toscana.core.BaseUnitTest;
+import org.opentosca.toscana.model.node.DockerApplication;
+import org.opentosca.toscana.model.node.RootNode;
 import org.opentosca.toscana.plugins.testdata.TestEffectiveModels;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.junit.Test;
 import org.yaml.snakeyaml.Yaml;
 
+import static junit.framework.TestCase.fail;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
 
 public class ResourceFileCreatorTest extends BaseUnitTest {
-
     @Test
     public void testReplicationControllerCreation() throws MalformedURLException {
+        Set<RootNode> nodes = TestEffectiveModels.getMinimalDockerApplication();
+        DockerApplication app = null;
+        for (RootNode node : nodes) {
+            if (node instanceof DockerApplication) {
+                app = (DockerApplication) node;
+            }
+        }
         ResourceFileCreator resourceFileCreator
-            = new ResourceFileCreator(Arrays.asList(Arrays.asList(TestEffectiveModels.getMinimalDockerApplication())));
+            = new ResourceFileCreator(Arrays.asList(Arrays.asList(app)));
         HashMap<String, String> result = null;
         try {
             result = resourceFileCreator.create();
