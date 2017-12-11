@@ -99,7 +99,7 @@ public class KubernetesLifecycle extends AbstractLifecycle {
             String fileContent = entry.getValue();
             logger.info(fileContent);
             try {
-                access.access("output/" + fileName + ".yaml").append(fileContent);
+                access.access("output/" + fileName + ".yaml").append(fileContent).close();
             } catch (IOException e) {
 
             }

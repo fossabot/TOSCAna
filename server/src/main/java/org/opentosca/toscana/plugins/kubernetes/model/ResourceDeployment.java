@@ -30,6 +30,7 @@ public class ResourceDeployment {
         for (DockerApplication app : stack) {
             String imagePath = "";
             Optional<Operation> createOperation = app.getStandardLifecycle().getCreate();
+            System.out.println(createOperation.toString());
             if (createOperation.isPresent()) {
                 Optional<Artifact> artifactOptional = createOperation.get().getArtifact();
                 if (artifactOptional.isPresent()) {
