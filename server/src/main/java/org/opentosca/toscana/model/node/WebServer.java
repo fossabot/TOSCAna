@@ -53,19 +53,16 @@ public class WebServer extends SoftwareComponent {
     /**
      @param nodeName      {@link #nodeName}
      @param containerHost {@link #containerHost}
-     @param host          {@link #host}
      @param dataEndpoint  {@link #dataEndpoint}
      @param adminEndpoint {@link #adminEndpoint}
      */
     public static WebServerBuilder builder(String nodeName,
                                            ContainerCapability containerHost,
-                                           HostRequirement host,
                                            EndpointCapability dataEndpoint,
                                            AdminEndpointCapability adminEndpoint) {
         return new WebServerBuilder()
             .nodeName(nodeName)
             .containerHost(containerHost)
-            .host(host)
             .dataEndpoint(dataEndpoint)
             .adminEndpoint(adminEndpoint);
     }

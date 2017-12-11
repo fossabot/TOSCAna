@@ -61,11 +61,11 @@ public class Database extends RootNode {
         this.port = port;
         this.user = user;
         this.password = password;
-        this.host = Objects.requireNonNull(host);
+        this.host = DbmsRequirement.getFallback(host);
         this.databaseEndpoint = Objects.requireNonNull(databaseEndpoint);
 
-        capabilities.add(databaseEndpoint);
-        requirements.add(host);
+        capabilities.add(this.databaseEndpoint);
+        requirements.add(this.host);
     }
 
     // only use when subclassing this and hiding host field
@@ -91,17 +91,14 @@ public class Database extends RootNode {
     /**
      @param nodeName         {@link #nodeName}
      @param databaseName     {@link #databaseName}
-     @param host             {@link #host}
      @param databaseEndpoint {@link #databaseEndpoint}
      */
     public static DatabaseBuilder builder(String nodeName,
                                           String databaseName,
-                                          DbmsRequirement host,
                                           DatabaseEndpointCapability databaseEndpoint) {
         return new DatabaseBuilder()
             .nodeName(nodeName)
             .databaseName(databaseName)
-            .host(host)
             .databaseEndpoint(databaseEndpoint);
     }
 

@@ -11,7 +11,6 @@ import org.opentosca.toscana.model.artifact.Repository;
 import org.opentosca.toscana.model.capability.AdminEndpointCapability;
 import org.opentosca.toscana.model.capability.ContainerCapability;
 import org.opentosca.toscana.model.capability.DockerContainerCapability;
-import org.opentosca.toscana.model.capability.EndpointCapability;
 import org.opentosca.toscana.model.capability.OsCapability;
 import org.opentosca.toscana.model.datatype.Port;
 import org.opentosca.toscana.model.node.Compute;
@@ -23,7 +22,6 @@ import org.opentosca.toscana.model.operation.StandardLifecycle;
 import org.opentosca.toscana.model.relation.AttachesTo;
 import org.opentosca.toscana.model.requirement.BlockStorageRequirement;
 import org.opentosca.toscana.model.requirement.DockerHostRequirement;
-import org.opentosca.toscana.model.requirement.EndpointRequirement;
 
 import com.google.common.collect.Sets;
 
@@ -61,28 +59,30 @@ public class TestEffectiveModels {
     public static DockerApplication getMinimalDockerApplication() throws MalformedURLException {
         DockerContainerCapability containerCapability = DockerContainerCapability.builder().build();
         ContainerRuntime dockerRuntime = ContainerRuntime
-            .builder("dockerRuntime").
-                containerHost(containerCapability).
-                build();
-        DockerHostRequirement host = DockerHostRequirement
-            .builder()
+            .builder("dockerRuntime")
+            .containerHost(containerCapability)
+            .build();
+        DockerHostRequirement host = DockerHostRequirement.builder()
             .fulfiller(dockerRuntime)
             .build();
-        EndpointCapability endpointCapability = EndpointCapability
-            .builder("127.0.0.1", new Port(80))
+        Repository repository = Repository
+            .builder("docker_hub", new URL("https://registry.hub.docker.com/"))
             .build();
-        EndpointRequirement network = EndpointRequirement.
-            builder(endpointCapability)
+        Artifact artifact = Artifact
+            .builder("my_image", "nfode/simpletaskapp:v1")
+            .repository(repository)
             .build();
-        Repository repository = Repository.builder(new URL("https://registry.hub.docker.com/")).build();
-        Artifact artifact = Artifact.builder("nfode/simpletaskapp:v1").repository(repository).build();
-        Operation create = Operation.builder().artifact(artifact).build();
-        StandardLifecycle standardLifecycle = StandardLifecycle.builder().create(create).build();
+        Operation create = Operation.builder()
+            .artifact(artifact)
+            .build();
+        StandardLifecycle standardLifecycle = StandardLifecycle.builder()
+            .create(create)
+            .build();
 
         DockerApplication simpleTaskApp = DockerApplication
-            .builder("simpleTaskApp", network)
-            .standardLifecycle(standardLifecycle)
+            .builder("simpleTaskApp")
             .host(host)
+            .standardLifecycle(standardLifecycle)
             .build();
         return simpleTaskApp;
     }

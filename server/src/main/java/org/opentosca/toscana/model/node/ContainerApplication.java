@@ -34,9 +34,9 @@ public class ContainerApplication extends RootNode {
         super(nodeName, standardLifecycle, description);
         this.storage = StorageRequirement.getFallback(storage);
         this.host = ContainerHostRequirement.getFallback(host);
-        this.network = Objects.requireNonNull(network);
+        this.network = EndpointRequirement.getFallback(network);
 
-        requirements.add(host);
+        requirements.add(this.host);
         requirements.add(this.storage);
         requirements.add(this.network);
     }
@@ -52,7 +52,7 @@ public class ContainerApplication extends RootNode {
         super(nodeName, standardLifecycle, description);
         this.host = null; // this is a hack. field shall not be used because its shadowed by the subclass
         this.storage = StorageRequirement.getFallback(storage);
-        this.network = Objects.requireNonNull(network);
+        this.network = EndpointRequirement.getFallback(network);
 
         requirements.add(this.storage);
         requirements.add(this.network);
@@ -60,13 +60,10 @@ public class ContainerApplication extends RootNode {
 
     /**
      @param nodeName {@link #nodeName}
-     @param network  {@link #network}
      */
-    public static ContainerApplicationBuilder builder(String nodeName,
-                                                      EndpointRequirement network) {
+    public static ContainerApplicationBuilder builder(String nodeName) {
         return new ContainerApplicationBuilder()
-            .nodeName(nodeName)
-            .network(network);
+            .nodeName(nodeName);
     }
 
     @Override

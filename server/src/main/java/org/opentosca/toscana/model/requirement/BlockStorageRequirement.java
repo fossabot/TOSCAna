@@ -19,11 +19,14 @@ public class BlockStorageRequirement extends Requirement<AttachmentCapability, B
                                       Range occurrence,
                                       @Singular Set<BlockStorage> fulfillers,
                                       AttachesTo relationship) {
-        super(AttachmentCapability.getFallback(capability), occurrence, fulfillers, relationship);
+        super(capability, occurrence, fulfillers, relationship);
     }
 
     public static BlockStorageRequirementBuilder builder(AttachesTo relationship) {
         return new BlockStorageRequirementBuilder()
             .relationship(relationship);
+    }
+
+    public static class BlockStorageRequirementBuilder extends RequirementBuilder<AttachmentCapability, BlockStorage, AttachesTo> {
     }
 }

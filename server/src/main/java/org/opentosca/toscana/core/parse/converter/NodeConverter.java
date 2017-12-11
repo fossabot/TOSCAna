@@ -1,30 +1,72 @@
 package org.opentosca.toscana.core.parse.converter;
 
+import java.lang.reflect.Constructor;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.BiFunction;
 
+import org.opentosca.toscana.core.parse.converter.visitor.ConversionResult;
+import org.opentosca.toscana.core.parse.converter.visitor.NodeContext;
+import org.opentosca.toscana.core.parse.converter.visitor.node.ApacheVisitor;
+import org.opentosca.toscana.core.parse.converter.visitor.node.BlockStorageVisitor;
+import org.opentosca.toscana.core.parse.converter.visitor.node.ComputeVisitor;
+import org.opentosca.toscana.core.parse.converter.visitor.node.ContainerApplicationVisitor;
+import org.opentosca.toscana.core.parse.converter.visitor.node.ContainerRuntimeVisitor;
+import org.opentosca.toscana.core.parse.converter.visitor.node.DatabaseVisitor;
+import org.opentosca.toscana.core.parse.converter.visitor.node.DbmsVisitor;
+import org.opentosca.toscana.core.parse.converter.visitor.node.DescribableVisitor;
+import org.opentosca.toscana.core.parse.converter.visitor.node.DockerApplicationVisitor;
+import org.opentosca.toscana.core.parse.converter.visitor.node.LoadBalancerVisitor;
+import org.opentosca.toscana.core.parse.converter.visitor.node.MysqlDatabaseVisitor;
+import org.opentosca.toscana.core.parse.converter.visitor.node.MysqlDbmsVisitor;
+import org.opentosca.toscana.core.parse.converter.visitor.node.NodejsVisitor;
+import org.opentosca.toscana.core.parse.converter.visitor.node.ObjectStorageVisitor;
+import org.opentosca.toscana.core.parse.converter.visitor.node.SoftwareComponentVisitor;
+import org.opentosca.toscana.core.parse.converter.visitor.node.WebApplicationVisitor;
+import org.opentosca.toscana.core.parse.converter.visitor.node.WebServerVisitor;
+import org.opentosca.toscana.core.parse.converter.visitor.node.WordPressVisitor;
+import org.opentosca.toscana.model.DescribableEntity;
+import org.opentosca.toscana.model.DescribableEntity.DescribableEntityBuilder;
+import org.opentosca.toscana.model.artifact.Repository;
 import org.opentosca.toscana.model.node.Apache;
+import org.opentosca.toscana.model.node.Apache.ApacheBuilder;
 import org.opentosca.toscana.model.node.BlockStorage;
+import org.opentosca.toscana.model.node.BlockStorage.BlockStorageBuilder;
 import org.opentosca.toscana.model.node.Compute;
+import org.opentosca.toscana.model.node.Compute.ComputeBuilder;
 import org.opentosca.toscana.model.node.ContainerApplication;
+import org.opentosca.toscana.model.node.ContainerApplication.ContainerApplicationBuilder;
 import org.opentosca.toscana.model.node.ContainerRuntime;
+import org.opentosca.toscana.model.node.ContainerRuntime.ContainerRuntimeBuilder;
 import org.opentosca.toscana.model.node.Database;
+import org.opentosca.toscana.model.node.Database.DatabaseBuilder;
 import org.opentosca.toscana.model.node.Dbms;
+import org.opentosca.toscana.model.node.Dbms.DbmsBuilder;
 import org.opentosca.toscana.model.node.DockerApplication;
+import org.opentosca.toscana.model.node.DockerApplication.DockerApplicationBuilder;
 import org.opentosca.toscana.model.node.LoadBalancer;
+import org.opentosca.toscana.model.node.LoadBalancer.LoadBalancerBuilder;
+import org.opentosca.toscana.model.node.MysqlDatabase;
 import org.opentosca.toscana.model.node.MysqlDbms;
+import org.opentosca.toscana.model.node.MysqlDbms.MysqlDbmsBuilder;
 import org.opentosca.toscana.model.node.Nodejs;
+import org.opentosca.toscana.model.node.Nodejs.NodejsBuilder;
 import org.opentosca.toscana.model.node.ObjectStorage;
+import org.opentosca.toscana.model.node.ObjectStorage.ObjectStorageBuilder;
 import org.opentosca.toscana.model.node.RootNode;
 import org.opentosca.toscana.model.node.SoftwareComponent;
+import org.opentosca.toscana.model.node.SoftwareComponent.SoftwareComponentBuilder;
 import org.opentosca.toscana.model.node.WebApplication;
+import org.opentosca.toscana.model.node.WebApplication.WebApplicationBuilder;
 import org.opentosca.toscana.model.node.WebServer;
+import org.opentosca.toscana.model.node.WebServer.WebServerBuilder;
 import org.opentosca.toscana.model.node.WordPress;
+import org.opentosca.toscana.model.node.WordPress.WordPressBuilder;
 
 import com.google.common.collect.Sets;
 import org.eclipse.winery.model.tosca.yaml.TNodeTemplate;
+import org.slf4j.Logger;
 
 /**
  Contains logic to convert TOSCA node templates into nodes of the EffectiveModel
@@ -32,45 +74,51 @@ import org.eclipse.winery.model.tosca.yaml.TNodeTemplate;
 class NodeConverter {
 
     static final String TOSCA_PREFIX = "tosca.nodes.";
+    private final Set<Repository> repositories;
+    private final Logger logger;
 
     private Map<String, BiFunction<String, TNodeTemplate, RootNode>> conversionMap = new HashMap<>();
 
-    NodeConverter() {
+    NodeConverter(Set<Repository> repositories, Logger logger) {
+        this.repositories = repositories;
+        this.logger = logger;
         addRule("Compute", this::toCompute);
         addRule("Container.Application", this::toContainerApplication);
         addRule("Container.Runtime", this::toContainerRuntime);
-        addRule("BlockStorage", "Storage", this::toBlockStorage);
+        addRule("Storage", "BlockStorage", this::toBlockStorage);
         addRule("Database", this::toDatabase);
         addRule("Database.MySQL", this::toMysqlDbms);
-        addRule("Application.Docker", "Container", this::toDockerApplication);
+        addRule("Container", "Application.Docker", this::toDockerApplication);
         addRule("DBMS", this::toDbms);
         addRule("DBMS.MySQL", this::toMysqlDbms);
         addRule("LoadBalancer", this::toLoadBalancer);
-        addRule("ObjectStorage", "Storage", this::toObjectStorage);
+        addRule("Storage", "ObjectStorage", this::toObjectStorage);
         addRule("SoftwareComponent", this::toSoftwareComponent);
         addRule("WebApplication", this::toWebApplication);
-        addRule("WordPress", "WebApplication", this::toWordPress);
+        addRule("WebApplication", "WordPress", this::toWordPress);
         addRule("WebServer", this::toWebServer);
-        addRule("Apache", "WebServer", this::toApache);
-        addRule("Nodejs", "WebServer", this::toNodejs);
+        addRule("WebServer", "Apache", this::toApache);
+        addRule("WebServer", "Nodejs", this::toNodejs);
     }
 
     /**
      Establishes a correlation between a node type (string) and its construction method.
+
      @param simpleType the shorthand type of a node (e.g.: "Compute")
      @param conversion the conversion method which is used to construct an (EffectiveModel) node
      */
     private void addRule(String simpleType, BiFunction<String, TNodeTemplate, RootNode> conversion) {
-        addRule(simpleType, null, conversion);
+        addRule(null, simpleType, conversion);
     }
 
     /**
      Overloading {@link #addRule}
+
      @param simpleType {@link #addRule}
      @param typePrefix the prefix needed to construct the full type name: {@code tosca.nodes.<typePrefix>.<simpleType>}
      @param conversion {@link #addRule}
      */
-    private void addRule(String simpleType, String typePrefix, BiFunction<String, TNodeTemplate, RootNode> conversion) {
+    private void addRule(String typePrefix, String simpleType, BiFunction<String, TNodeTemplate, RootNode> conversion) {
         Set<String> typeSet = getTypes(simpleType, typePrefix);
         typeSet.forEach(typeName -> conversionMap.put(typeName, conversion));
     }
@@ -82,6 +130,7 @@ class NodeConverter {
 
     RootNode convert(String name, TNodeTemplate template) throws UnknownNodeTypeException {
         String nodeType = template.getType().getLocalPart();
+        logger.debug("> Convert node template '{}' (type: '{}')", name, nodeType);
         BiFunction<String, TNodeTemplate, RootNode> conversion = conversionMap.get(nodeType);
         if (conversion == null) {
             throw new UnknownNodeTypeException(String.format(
@@ -96,67 +145,86 @@ class NodeConverter {
         }
     }
 
+    private <NodeT extends DescribableEntity, BuilderT extends DescribableEntityBuilder,
+        VisitorT extends DescribableVisitor<NodeT, BuilderT>>
+    NodeT toNode(String name, TNodeTemplate template, Class<BuilderT> builderType, VisitorT visitor) {
+        NodeContext<BuilderT> context = new NodeContext<>(name, newInstance(builderType), repositories);
+        ConversionResult<NodeT> result = visitor.visit(template, context);
+        return result.getResult();
+    }
+
+    <NodeT> NodeT newInstance(Class clazz) {
+        try {
+            Constructor<NodeT> constructor = clazz.getDeclaredConstructor();
+            constructor.setAccessible(true);
+            return constructor.newInstance();
+        } catch (Exception e) {
+            logger.error("Failed to retrieve builder via reflection");
+            return null;
+        }
+    }
+
     private Apache toApache(String name, TNodeTemplate template) {
-        throw new UnsupportedOperationException();
+        return toNode(name, template, ApacheBuilder.class, new ApacheVisitor());
     }
 
     private BlockStorage toBlockStorage(String name, TNodeTemplate template) {
-        throw new UnsupportedOperationException();
+        return toNode(name, template, BlockStorageBuilder.class, new BlockStorageVisitor<>());
     }
 
     private Compute toCompute(String name, TNodeTemplate template) {
-        throw new UnsupportedOperationException();
+        return toNode(name, template, ComputeBuilder.class, new ComputeVisitor<>());
     }
 
     private ContainerApplication toContainerApplication(String name, TNodeTemplate template) {
-        throw new UnsupportedOperationException();
+        return toNode(name, template, ContainerApplicationBuilder.class, new ContainerApplicationVisitor<>());
     }
 
     private ContainerRuntime toContainerRuntime(String name, TNodeTemplate template) {
-        throw new UnsupportedOperationException();
+        return toNode(name, template, ContainerRuntimeBuilder.class, new ContainerRuntimeVisitor());
     }
 
     private Database toDatabase(String name, TNodeTemplate template) {
-        throw new UnsupportedOperationException();
+        return toNode(name, template, DatabaseBuilder.class, new DatabaseVisitor());
     }
 
     private Dbms toDbms(String name, TNodeTemplate template) {
-        throw new UnsupportedOperationException();
+        return toNode(name, template, DbmsBuilder.class, new DbmsVisitor<>());
     }
 
     private DockerApplication toDockerApplication(String name, TNodeTemplate template) {
-        throw new UnsupportedOperationException();
+        return toNode(name, template, DockerApplicationBuilder.class, new DockerApplicationVisitor());
     }
 
     private LoadBalancer toLoadBalancer(String name, TNodeTemplate template) {
-        throw new UnsupportedOperationException();
+        return toNode(name, template, LoadBalancerBuilder.class, new LoadBalancerVisitor<>());
     }
 
     private MysqlDbms toMysqlDbms(String name, TNodeTemplate template) {
-        throw new UnsupportedOperationException();
+        return toNode(name, template, MysqlDbmsBuilder.class, new MysqlDbmsVisitor<>());
     }
 
     private Nodejs toNodejs(String name, TNodeTemplate template) {
-        throw new UnsupportedOperationException();
+        return toNode(name, template, NodejsBuilder.class, new NodejsVisitor<>());
     }
 
     private ObjectStorage toObjectStorage(String name, TNodeTemplate template) {
-        throw new UnsupportedOperationException();
+        return toNode(name, template, ObjectStorageBuilder.class, new ObjectStorageVisitor<>());
     }
 
     private SoftwareComponent toSoftwareComponent(String name, TNodeTemplate template) {
-        throw new UnsupportedOperationException();
+        return toNode(name, template, SoftwareComponentBuilder.class, new SoftwareComponentVisitor());
     }
 
     private WebApplication toWebApplication(String name, TNodeTemplate template) {
-        throw new UnsupportedOperationException();
+        return toNode(name, template, WebApplicationBuilder.class, new WebApplicationVisitor());
     }
 
     private WebServer toWebServer(String name, TNodeTemplate template) {
-        throw new UnsupportedOperationException();
+        return toNode(name, template, WebServerBuilder.class, new WebServerVisitor());
     }
 
     private WordPress toWordPress(String name, TNodeTemplate template) {
-        throw new UnsupportedOperationException();
+        return toNode(name, template, WordPressBuilder.class, new WordPressVisitor());
     }
 }

@@ -19,11 +19,14 @@ public class HostRequirement extends Requirement<ContainerCapability, Compute, H
                               Range occurrence,
                               @Singular Set<Compute> fulfillers,
                               HostedOn relationship) {
-        super(ContainerCapability.getFallback(capability), occurrence,
+        super(capability, occurrence,
             fulfillers, HostedOn.getFallback(relationship));
     }
 
     public static HostRequirement getFallback(HostRequirement host) {
         return (host == null) ? HostRequirement.builder().build() : host;
+    }
+
+    public static class HostRequirementBuilder extends RequirementBuilder<ContainerCapability, Compute, HostedOn> {
     }
 }

@@ -53,15 +53,12 @@ public class Dbms extends SoftwareComponent {
 
     /**
      @param nodeName      {@link #nodeName}
-     @param host          {@link #host}
      @param containerHost {@link #containerHost}
      */
     public static DbmsBuilder builder(String nodeName,
-                                      HostRequirement host,
                                       ContainerCapability containerHost) {
         return new DbmsBuilder()
             .nodeName(nodeName)
-            .host(host)
             .containerHost(containerHost);
     }
 

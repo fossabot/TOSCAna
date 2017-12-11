@@ -22,10 +22,15 @@ public class DatabaseEndpointRequirement extends Requirement<DatabaseEndpointCap
         super(capability, occurrence, fulfillers, relationship);
     }
 
-    public static DatabaseEndpointRequirementBuilder builder(DatabaseEndpointCapability capability,
-                                                             ConnectsTo relationship) {
+    public static DatabaseEndpointRequirementBuilder builder(ConnectsTo relationship) {
         return new DatabaseEndpointRequirementBuilder()
-            .capability(capability)
             .relationship(relationship);
+    }
+
+    public static DatabaseEndpointRequirement getFallback(DatabaseEndpointRequirement databaseEndpoint) {
+        return (databaseEndpoint == null) ? DatabaseEndpointRequirement.builder(new ConnectsTo()).build() : databaseEndpoint;
+    }
+
+    public static class DatabaseEndpointRequirementBuilder extends RequirementBuilder<DatabaseEndpointCapability, Database, ConnectsTo> {
     }
 }

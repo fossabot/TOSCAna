@@ -31,3 +31,4 @@ topology_template:
     endpoint:
       value: { get_attribute: [ simpleTaskApp, endpoint ] }
       type: string
+
