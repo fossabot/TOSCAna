@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.opentosca.toscana.core.parse.converter.visitor.RepositoryVisitor;
+import org.opentosca.toscana.core.parse.converter.visitor.SetResult;
 import org.opentosca.toscana.model.EffectiveModel;
 import org.opentosca.toscana.model.artifact.Repository;
 import org.opentosca.toscana.model.node.RootNode;
@@ -37,7 +38,8 @@ public class ModelConverter {
 
     private Set<Repository> getRepositories(TServiceTemplate serviceTemplate) {
         RepositoryVisitor visitor = new RepositoryVisitor(logger);
-        Set<Repository> repositories = visitor.visit(serviceTemplate, new Parameter()).get();
+        SetResult<Repository> repositoryResult = visitor.visit(serviceTemplate, new Parameter());
+        Set<Repository> repositories = (repositoryResult == null) ? new HashSet<Repository>() : repositoryResult.get();
         return repositories;
     }
 
