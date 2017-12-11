@@ -3,6 +3,7 @@ package org.opentosca.toscana.plugins.testdata;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.opentosca.toscana.model.artifact.Artifact;
 import org.opentosca.toscana.model.capability.AdminEndpointCapability;
 import org.opentosca.toscana.model.capability.ContainerCapability;
 import org.opentosca.toscana.model.capability.ContainerCapability.ContainerCapabilityBuilder;
@@ -83,7 +84,7 @@ public class LampApp {
 
     private MysqlDbms createMysqlDbms() {
         Operation dbmsOperation = Operation.builder()
-            .implementationArtifact("mysql_dbms/mysql_dbms_configure.sh")
+            .artifact(Artifact.builder("artifact", "mysql_dbms/mysql_dbms_configure.sh").build())
             .input(new OperationVariable("db_root_password"))
             .build();
 
@@ -140,7 +141,7 @@ public class LampApp {
         appDependencies.add("my_app/myphpapp.php");
         appDependencies.add("my_app/mysql-credentials.php");
         Operation appCreate = Operation.builder()
-            .implementationArtifact("my_app/create_myphpapp.sh")
+            .artifact(Artifact.builder("artifact", "my_app/create_myphpapp.sh").build())
             .dependencies(appDependencies)
             .build();
 
@@ -154,7 +155,7 @@ public class LampApp {
         appInputs.add(dbPort);
 
         Operation appConfigure = Operation.builder()
-            .implementationArtifact("my_app/configure_myphpapp.sh")
+            .artifact(Artifact.builder("artifact", "my_app/configure_myphpapp.sh").build())
             .inputs(appInputs)
             .build();
 

@@ -48,6 +48,7 @@ public class Artifact extends DescribableEntity {
     }
 
     /**
+     @param name {@link #name}
      @param filePath {@link #filePath}
      */
     public static ArtifactBuilder builder(String name,

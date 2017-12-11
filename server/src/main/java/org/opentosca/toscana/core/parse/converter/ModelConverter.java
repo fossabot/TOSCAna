@@ -2,12 +2,10 @@ package org.opentosca.toscana.core.parse.converter;
 
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 import org.opentosca.toscana.core.parse.converter.visitor.RepositoryVisitor;
-import org.opentosca.toscana.core.parse.converter.visitor.SimpleContext;
 import org.opentosca.toscana.model.EffectiveModel;
 import org.opentosca.toscana.model.artifact.Repository;
 import org.opentosca.toscana.model.node.RootNode;
@@ -19,7 +17,7 @@ import org.eclipse.winery.yaml.common.validator.support.Parameter;
 import org.slf4j.Logger;
 
 /**
- Contains logic to convert a {@link TServiceTemplate} to a {@link EffectiveModel}
+ Contains logic to convertStandard a {@link TServiceTemplate} to a {@link EffectiveModel}
  */
 public class ModelConverter {
 
@@ -33,6 +31,7 @@ public class ModelConverter {
         logger.debug("Convert service template to normative model");
         Set<Repository> repositories = getRepositories(serviceTemplate);
         Set<RootNode> nodes = convertNodeTemplates(serviceTemplate.getTopologyTemplate(), repositories);
+        fulfillRequirements(nodes);
         return new EffectiveModel(nodes);
     }
 
@@ -58,5 +57,9 @@ public class ModelConverter {
             nodes.add(node);
         }
         return nodes;
+    }
+
+    private void fulfillRequirements(Set<RootNode> nodes) {
+        
     }
 }

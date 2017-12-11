@@ -18,5 +18,6 @@ public class DockerConverterIT {
 
         EffectiveModel model = parser.parse(TestCsars.VALID_MINIMAL_DOCKER_TEMPLATE);
         // TODO 
+        return;
     }
 }
