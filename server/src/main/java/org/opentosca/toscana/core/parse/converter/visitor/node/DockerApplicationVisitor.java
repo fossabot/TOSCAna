@@ -1,7 +1,5 @@
 package org.opentosca.toscana.core.parse.converter.visitor.node;
 
-import org.opentosca.toscana.core.parse.converter.RequirementConversion;
-import org.opentosca.toscana.core.parse.converter.RequirementConverter;
 import org.opentosca.toscana.core.parse.converter.visitor.ConversionResult;
 import org.opentosca.toscana.core.parse.converter.visitor.NodeContext;
 import org.opentosca.toscana.model.capability.DockerContainerCapability;
@@ -9,6 +7,7 @@ import org.opentosca.toscana.model.node.ContainerRuntime;
 import org.opentosca.toscana.model.node.DockerApplication;
 import org.opentosca.toscana.model.node.DockerApplication.DockerApplicationBuilder;
 import org.opentosca.toscana.model.relation.HostedOn;
+import org.opentosca.toscana.model.relation.RootRelationship;
 
 import org.eclipse.winery.model.tosca.yaml.TNodeTemplate;
 import org.eclipse.winery.model.tosca.yaml.TPropertyAssignment;
@@ -18,7 +17,6 @@ public class DockerApplicationVisitor<NodeT extends DockerApplication, BuilderT 
 
     private static final String HOST_REQUIREMENT = "host";
     private static final String NETWORK_REQUIREMENT = "network";
-    
 
     @Override
     public ConversionResult<NodeT> visit(TNodeTemplate node, NodeContext<BuilderT> parameter) {
@@ -36,22 +34,14 @@ public class DockerApplicationVisitor<NodeT extends DockerApplication, BuilderT 
         return null;
     }
 
-    @Override
-    public ConversionResult<NodeT> visit(TRequirementAssignment node, NodeContext<BuilderT> parameter) {
-        BuilderT builder = parameter.getNodeBuilder();
-        switch (parameter.getKey()) {
-            // TODO make requirements work in general
+
+    protected void handleRequirement(TRequirementAssignment node, NodeContext<BuilderT> context, BuilderT builder) {
+        switch (context.getKey()) {
             case HOST_REQUIREMENT:
-                // TODO refactor -> generalize code
-                RequirementConversion requirementConversion = new RequirementConverter().<DockerContainerCapability, ContainerRuntime, HostedOn>convert(node, "host", HostedOn.class);
-                builder.dockerHost(requirementConversion.requirement);
-                parameter.addRequirementConversion(requirementConversion);
-                break;
-            case NETWORK_REQUIREMENT:
+                builder.dockerHost(provideRequirement(node, context, HostedOn.class));
                 break;
             default:
-                super.visit(node, parameter);
+                super.visit(node, context);
         }
-        return null;
     }
 }

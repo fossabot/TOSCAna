@@ -26,8 +26,7 @@ public class Database extends RootNode {
     /**
      The logical database databaseName.
      (TOSCA Simple Profile in YAML Version 1.1, p. 173)
-     */
-    private final String databaseName;
+     */ private final String databaseName;
 
     /**
      The optional port the database service will use for incoming data and request.
@@ -53,7 +52,7 @@ public class Database extends RootNode {
                      Integer port,
                      String user,
                      String password,
-                     DbmsRequirement host,
+                     Requirement<ContainerCapability, Dbms, HostedOn> host,
                      DatabaseEndpointCapability databaseEndpoint,
                      String nodeName,
                      StandardLifecycle standardLifecycle,

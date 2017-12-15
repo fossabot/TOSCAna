@@ -6,6 +6,7 @@ import org.opentosca.toscana.model.node.BlockStorage;
 import org.opentosca.toscana.model.node.BlockStorage.BlockStorageBuilder;
 
 import org.eclipse.winery.model.tosca.yaml.TPropertyAssignment;
+import org.eclipse.winery.model.tosca.yaml.TRequirementAssignment;
 
 public class BlockStorageVisitor<NodeT extends BlockStorage, BuilderT extends BlockStorageBuilder> extends RootNodeVisitor<NodeT, BuilderT> {
 
@@ -18,5 +19,13 @@ public class BlockStorageVisitor<NodeT extends BlockStorage, BuilderT extends Bl
                 super.visit(node, parameter);
         }
         return null;
+    }
+
+    @Override
+    protected void handleRequirement(TRequirementAssignment requirement, NodeContext<BuilderT> context, BuilderT builder) {
+        switch (context.getKey()){
+            default:
+                super.handleRequirement(requirement, context, builder);
+        }
     }
 }

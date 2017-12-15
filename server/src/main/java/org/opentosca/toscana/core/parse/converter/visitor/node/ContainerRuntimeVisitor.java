@@ -6,6 +6,7 @@ import org.opentosca.toscana.model.node.ContainerRuntime;
 import org.opentosca.toscana.model.node.ContainerRuntime.ContainerRuntimeBuilder;
 
 import org.eclipse.winery.model.tosca.yaml.TPropertyAssignment;
+import org.eclipse.winery.model.tosca.yaml.TRequirementAssignment;
 
 public class ContainerRuntimeVisitor<NodeT extends ContainerRuntime, BuilderT extends ContainerRuntimeBuilder> extends SoftwareComponentVisitor<NodeT, BuilderT> {
 
@@ -21,5 +22,13 @@ public class ContainerRuntimeVisitor<NodeT extends ContainerRuntime, BuilderT ex
                 super.visit(node, parameter);
         }
         return null;
+    }
+
+    @Override
+    protected void handleRequirement(TRequirementAssignment requirement, NodeContext<BuilderT> context, BuilderT builder) {
+        switch (context.getKey()){
+            default:
+                super.handleRequirement(requirement, context, builder);
+        }
     }
 }

@@ -56,5 +56,17 @@ public class MysqlDatabase extends Database {
     }
 
     public static class MysqlDatabaseBuilder extends DatabaseBuilder {
+
+        @Override
+        public DatabaseBuilder host(Requirement<ContainerCapability, Dbms, HostedOn> host) {
+            // this is a hack - shall enforce the usage of mysqlHost() (root of all evil is generic type erasure)
+            throw new IllegalStateException();
+        }
+        
+        public DatabaseBuilder mysqlHost(Requirement<ContainerCapability, MysqlDbms, HostedOn> host) {
+            this.host = host;
+            return this;
+        }
+
     }
 }

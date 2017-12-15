@@ -6,6 +6,7 @@ import org.opentosca.toscana.model.node.MysqlDbms;
 import org.opentosca.toscana.model.node.MysqlDbms.MysqlDbmsBuilder;
 
 import org.eclipse.winery.model.tosca.yaml.TPropertyAssignment;
+import org.eclipse.winery.model.tosca.yaml.TRequirementAssignment;
 
 public class MysqlDbmsVisitor<NodeT extends MysqlDbms, BuilderT extends MysqlDbmsBuilder> extends DbmsVisitor<NodeT, BuilderT> {
 
@@ -18,5 +19,14 @@ public class MysqlDbmsVisitor<NodeT extends MysqlDbms, BuilderT extends MysqlDbm
                 super.visit(node, parameter);
         }
         return null;
+    }
+
+    @Override
+    protected void handleRequirement(TRequirementAssignment requirement, NodeContext<BuilderT> context, BuilderT builder) {
+        switch (context.getKey()){
+            default:
+                super.handleRequirement(requirement, context, builder);
+        }
+        
     }
 }

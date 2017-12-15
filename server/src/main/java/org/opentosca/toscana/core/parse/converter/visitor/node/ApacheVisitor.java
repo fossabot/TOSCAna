@@ -6,6 +6,7 @@ import org.opentosca.toscana.model.node.Apache;
 import org.opentosca.toscana.model.node.Apache.ApacheBuilder;
 
 import org.eclipse.winery.model.tosca.yaml.TPropertyAssignment;
+import org.eclipse.winery.model.tosca.yaml.TRequirementAssignment;
 
 public class ApacheVisitor<NodeT extends Apache, BuilderT extends ApacheBuilder> extends WebServerVisitor<NodeT, BuilderT> {
 
@@ -18,5 +19,13 @@ public class ApacheVisitor<NodeT extends Apache, BuilderT extends ApacheBuilder>
                 super.visit(node, parameter);
         }
         return null;
+    }
+
+    @Override
+    protected void handleRequirement(TRequirementAssignment requirement, NodeContext<BuilderT> context, BuilderT builder) {
+        switch (context.getKey()){
+            default:
+                super.handleRequirement(requirement, context, builder);
+        }
     }
 }

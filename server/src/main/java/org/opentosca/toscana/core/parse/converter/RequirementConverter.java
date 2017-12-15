@@ -16,21 +16,21 @@ public class RequirementConverter {
 
     private final static Logger logger = LoggerFactory.getLogger(RequirementConverter.class.getName());
 
-    public <CapabilityT extends Capability, NodeT extends RootNode, RelationshipT extends RootRelationship> 
-    RequirementConversion<CapabilityT, NodeT, RelationshipT> convert(TRequirementAssignment requirementAssignment, String requirementName, Class relationshipType) {
+    public <CapabilityT extends Capability, NodeT extends RootNode, RelationshipT extends RootRelationship>
+    RequirementConversion<CapabilityT, NodeT, RelationshipT> convert(TRequirementAssignment requirementAssignment, Class relationshipType) {
         RelationshipT relationship = new RelationshipConverter().convert(requirementAssignment.getRelationship(), relationshipType);
         Requirement<CapabilityT, NodeT, RelationshipT> requirement = Requirement
             .<CapabilityT, NodeT, RelationshipT>builder(relationship)
             .occurrence(getOccurrence(requirementAssignment))
             .build();
         String fulfiller = requirementAssignment.getNode().getLocalPart();
-        return new RequirementConversion<CapabilityT, NodeT, RelationshipT>(requirement, fulfiller);
+        return new RequirementConversion(requirement, fulfiller);
     }
-    
+
     private Range getOccurrence(TRequirementAssignment node) {
         List<String> occurrenceDefinition = node.getOccurrences();
         Range occurrence = null;
-        if (occurrenceDefinition != null && occurrenceDefinition.size() == 2){
+        if (occurrenceDefinition != null && occurrenceDefinition.size() == 2) {
             int min = Integer.valueOf(occurrenceDefinition.get(0));
             int max = Integer.valueOf(occurrenceDefinition.get(1));
             occurrence = new Range(min, max);

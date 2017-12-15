@@ -6,6 +6,7 @@ import org.opentosca.toscana.model.node.Nodejs;
 import org.opentosca.toscana.model.node.Nodejs.NodejsBuilder;
 
 import org.eclipse.winery.model.tosca.yaml.TPropertyAssignment;
+import org.eclipse.winery.model.tosca.yaml.TRequirementAssignment;
 
 public class NodejsVisitor<NodeT extends Nodejs, BuilderT extends NodejsBuilder> extends WebServerVisitor<NodeT, BuilderT> {
 
@@ -18,5 +19,13 @@ public class NodejsVisitor<NodeT extends Nodejs, BuilderT extends NodejsBuilder>
                 super.visit(node, parameter);
         }
         return null;
+    }
+
+    @Override
+    protected void handleRequirement(TRequirementAssignment requirement, NodeContext<BuilderT> context, BuilderT builder) {
+        switch (context.getKey()){
+            default:
+                super.handleRequirement(requirement, context, builder);
+        }
     }
 }
