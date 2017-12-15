@@ -7,7 +7,6 @@ import org.opentosca.toscana.model.EffectiveModel;
 import org.opentosca.toscana.model.capability.AdminEndpointCapability;
 import org.opentosca.toscana.model.capability.ContainerCapability;
 import org.opentosca.toscana.model.capability.DockerContainerCapability;
-import org.opentosca.toscana.model.capability.EndpointCapability;
 import org.opentosca.toscana.model.capability.OsCapability;
 import org.opentosca.toscana.model.datatype.Port;
 import org.opentosca.toscana.model.node.Compute;
@@ -15,11 +14,8 @@ import org.opentosca.toscana.model.node.ContainerRuntime;
 import org.opentosca.toscana.model.node.DockerApplication;
 import org.opentosca.toscana.model.node.RootNode;
 import org.opentosca.toscana.model.relation.AttachesTo;
-import org.opentosca.toscana.model.relation.RootRelationship;
 import org.opentosca.toscana.model.requirement.BlockStorageRequirement;
 import org.opentosca.toscana.model.requirement.DockerHostRequirement;
-import org.opentosca.toscana.model.requirement.EndpointRequirement;
-import org.opentosca.toscana.model.requirement.StorageRequirement;
 
 import com.google.common.collect.Sets;
 
@@ -66,7 +62,7 @@ public class TestEffectiveModels {
             .build();
         DockerApplication simpleTaskApp = DockerApplication
             .builder("simpleTaskApp")
-            .host(host)
+            .dockerHost(host)
             .build();
         return new EffectiveModel(Sets.newHashSet(simpleTaskApp, dockerRuntime));
     }

@@ -8,7 +8,8 @@ import org.opentosca.toscana.model.node.LoadBalancer.LoadBalancerBuilder;
 import org.eclipse.winery.model.tosca.yaml.TPropertyAssignment;
 
 public class LoadBalancerVisitor<NodeT extends LoadBalancer, BuilderT extends LoadBalancerBuilder> extends RootNodeVisitor<NodeT, BuilderT> {
-
+    
+    
     @Override
     public ConversionResult<NodeT> visit(TPropertyAssignment node, NodeContext<BuilderT> parameter) {
         BuilderT builder = parameter.getNodeBuilder();

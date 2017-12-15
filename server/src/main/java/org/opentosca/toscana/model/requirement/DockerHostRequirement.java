@@ -23,7 +23,7 @@ public class DockerHostRequirement extends Requirement<DockerContainerCapability
             fulfillers, HostedOn.getFallback(relationship));
     }
 
-    public static DockerHostRequirement getFallback(DockerHostRequirement r) {
+    public static Requirement<DockerContainerCapability, ContainerRuntime, HostedOn> getFallback(Requirement<DockerContainerCapability, ContainerRuntime, HostedOn> r) {
         return (r == null) ? builder().build() : r;
     }
 

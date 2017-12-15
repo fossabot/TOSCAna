@@ -78,7 +78,7 @@ public class Requirement<CapabilityT extends Capability, NodeT extends RootNode,
     }
 
     public static class RequirementBuilder<CapabilityT extends Capability, NodeT extends RootNode, RelationshipT extends RootRelationship> {
-        private HashSet<NodeT> fulfillers;
+        private HashSet<NodeT> fulfillers = new HashSet<>();
 
         public RequirementBuilder<CapabilityT, NodeT, RelationshipT> fulfiller(NodeT fulfiller) {
             if (this.fulfillers == null) this.fulfillers = new HashSet<NodeT>();

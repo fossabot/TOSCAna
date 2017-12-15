@@ -1,8 +1,11 @@
 package org.opentosca.toscana.model.node;
 
+import org.opentosca.toscana.model.capability.ContainerCapability;
 import org.opentosca.toscana.model.capability.DatabaseEndpointCapability;
 import org.opentosca.toscana.model.operation.StandardLifecycle;
+import org.opentosca.toscana.model.relation.HostedOn;
 import org.opentosca.toscana.model.requirement.MysqlDbmsRequirement;
+import org.opentosca.toscana.model.requirement.Requirement;
 import org.opentosca.toscana.model.visitor.NodeVisitor;
 
 import lombok.AccessLevel;
@@ -14,14 +17,14 @@ import lombok.Getter;
 public class MysqlDatabase extends Database {
 
     @Getter(AccessLevel.NONE)
-    public final MysqlDbmsRequirement host;
+    public final Requirement<ContainerCapability, MysqlDbms, HostedOn> host;
 
     @Builder
     public MysqlDatabase(String databaseName,
                          Integer port,
                          String user,
                          String password,
-                         MysqlDbmsRequirement host,
+                         Requirement<ContainerCapability, MysqlDbms, HostedOn> host,
                          DatabaseEndpointCapability databaseEndpoint,
                          String nodeName,
                          StandardLifecycle standardLifecycle,

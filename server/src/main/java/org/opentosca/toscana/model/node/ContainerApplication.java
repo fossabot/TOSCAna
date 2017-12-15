@@ -1,10 +1,14 @@
 package org.opentosca.toscana.model.node;
 
-import java.util.Objects;
-
+import org.opentosca.toscana.model.capability.ContainerCapability;
+import org.opentosca.toscana.model.capability.EndpointCapability;
+import org.opentosca.toscana.model.capability.StorageCapability;
 import org.opentosca.toscana.model.operation.StandardLifecycle;
+import org.opentosca.toscana.model.relation.HostedOn;
+import org.opentosca.toscana.model.relation.RootRelationship;
 import org.opentosca.toscana.model.requirement.ContainerHostRequirement;
 import org.opentosca.toscana.model.requirement.EndpointRequirement;
+import org.opentosca.toscana.model.requirement.Requirement;
 import org.opentosca.toscana.model.requirement.StorageRequirement;
 import org.opentosca.toscana.model.visitor.NodeVisitor;
 
@@ -20,14 +24,14 @@ public class ContainerApplication extends RootNode {
 
     // public access due to hiding of field in subclasses (with different type):
     // here, getters can't be overridden. 
-    public final ContainerHostRequirement host;
-    private final StorageRequirement storage;
-    private final EndpointRequirement network;
+    public final Requirement<ContainerCapability, ContainerRuntime, HostedOn> host;
+    private final Requirement<StorageCapability, RootNode, RootRelationship> storage;
+    private final Requirement<EndpointCapability, RootNode, RootRelationship> network;
 
     @Builder
-    protected ContainerApplication(ContainerHostRequirement host,
-                                   StorageRequirement storage,
-                                   EndpointRequirement network,
+    protected ContainerApplication(Requirement<ContainerCapability, ContainerRuntime, HostedOn> host,
+                                   Requirement<StorageCapability, RootNode, RootRelationship> storage,
+                                   Requirement<EndpointCapability, RootNode, RootRelationship> network,
                                    String nodeName,
                                    StandardLifecycle standardLifecycle,
                                    String description) {
@@ -44,8 +48,8 @@ public class ContainerApplication extends RootNode {
     /**
      Only use when subclass is shadowing the `host` field.
      */
-    protected ContainerApplication(StorageRequirement storage,
-                                   EndpointRequirement network,
+    protected ContainerApplication(Requirement<StorageCapability, RootNode, RootRelationship> storage,
+                                   Requirement<EndpointCapability, RootNode, RootRelationship> network,
                                    String nodeName,
                                    StandardLifecycle standardLifecycle,
                                    String description) {
@@ -61,6 +65,7 @@ public class ContainerApplication extends RootNode {
     /**
      @param nodeName {@link #nodeName}
      */
+    @Builder
     public static ContainerApplicationBuilder builder(String nodeName) {
         return new ContainerApplicationBuilder()
             .nodeName(nodeName);

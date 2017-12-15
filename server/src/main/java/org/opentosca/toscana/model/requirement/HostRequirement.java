@@ -23,7 +23,7 @@ public class HostRequirement extends Requirement<ContainerCapability, Compute, H
             fulfillers, HostedOn.getFallback(relationship));
     }
 
-    public static HostRequirement getFallback(HostRequirement host) {
+    public static Requirement<ContainerCapability, Compute, HostedOn> getFallback(Requirement<ContainerCapability, Compute, HostedOn> host) {
         return (host == null) ? HostRequirement.builder().build() : host;
     }
 

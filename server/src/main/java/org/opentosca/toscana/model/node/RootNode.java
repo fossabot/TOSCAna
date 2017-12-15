@@ -64,11 +64,11 @@ public abstract class RootNode extends DescribableEntity implements VisitableNod
     }
 
     public static class RootNodeBuilder extends DescribableEntityBuilder {
-
+        
         @Override
         public RootNode build() {
             // should never be called (RootNode is abstract)
             throw new UnsupportedOperationException();
         }
-   }
+    }
 }

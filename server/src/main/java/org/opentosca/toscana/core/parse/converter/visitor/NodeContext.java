@@ -3,6 +3,7 @@ package org.opentosca.toscana.core.parse.converter.visitor;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.opentosca.toscana.core.parse.converter.RequirementConversion;
 import org.opentosca.toscana.model.DescribableEntity.DescribableEntityBuilder;
 import org.opentosca.toscana.model.artifact.Artifact;
 import org.opentosca.toscana.model.artifact.Repository;
@@ -15,6 +16,7 @@ public class NodeContext<NodeBuilderT extends DescribableEntityBuilder> extends 
     private final NodeBuilderT nodeBuilder;
     private final Set<Repository> repositories;
     private final Set<Artifact> artifacts = new HashSet<>();
+    private final Set<RequirementConversion> requirementConversions = new HashSet<>();
 
     public NodeContext(String name, NodeBuilderT builder, Set<Repository> repositories) {
         this.nodeName = name;
@@ -46,5 +48,13 @@ public class NodeContext<NodeBuilderT extends DescribableEntityBuilder> extends 
 
     public Set<Artifact> getArtifacts() {
         return artifacts;
+    }
+
+    public Set<RequirementConversion> getRequirementConversions() {
+        return requirementConversions;
+    }
+    
+    public void addRequirementConversion(RequirementConversion conversion){
+        requirementConversions.add(conversion);
     }
 }

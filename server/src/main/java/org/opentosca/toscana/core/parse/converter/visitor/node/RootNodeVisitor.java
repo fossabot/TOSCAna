@@ -1,5 +1,8 @@
 package org.opentosca.toscana.core.parse.converter.visitor.node;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.opentosca.toscana.core.parse.converter.visitor.ConversionResult;
 import org.opentosca.toscana.core.parse.converter.visitor.NodeContext;
 import org.opentosca.toscana.core.parse.converter.visitor.LifecycleConverter;
@@ -14,6 +17,8 @@ import org.eclipse.winery.model.tosca.yaml.TNodeTemplate;
 
 public abstract class RootNodeVisitor<NodeT extends RootNode, BuilderT extends RootNode.RootNodeBuilder> extends DescribableVisitor<NodeT, BuilderT> {
 
+    protected final Map<String, Class> requirementMappings = new HashMap<>();
+    
     @Override
     public ConversionResult<NodeT> visit(TNodeTemplate node, NodeContext<BuilderT> parameter) {
         BuilderT builder = parameter.getNodeBuilder();

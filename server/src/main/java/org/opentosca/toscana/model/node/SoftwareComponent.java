@@ -2,9 +2,12 @@ package org.opentosca.toscana.model.node;
 
 import java.util.Optional;
 
+import org.opentosca.toscana.model.capability.ContainerCapability;
 import org.opentosca.toscana.model.datatype.Credential;
 import org.opentosca.toscana.model.operation.StandardLifecycle;
+import org.opentosca.toscana.model.relation.HostedOn;
 import org.opentosca.toscana.model.requirement.HostRequirement;
+import org.opentosca.toscana.model.requirement.Requirement;
 import org.opentosca.toscana.model.visitor.NodeVisitor;
 
 import lombok.Builder;
@@ -29,12 +32,12 @@ public class SoftwareComponent extends RootNode {
      */
     private final Credential adminCredential;
 
-    private final HostRequirement host;
+    private final Requirement<ContainerCapability, Compute, HostedOn> host;
 
     @Builder
     protected SoftwareComponent(String componentVersion,
                                 Credential adminCredential,
-                                HostRequirement host,
+                                Requirement<ContainerCapability, Compute, HostedOn> host,
                                 String nodeName,
                                 StandardLifecycle standardLifecycle,
                                 String description) {
@@ -66,7 +69,7 @@ public class SoftwareComponent extends RootNode {
     public void accept(NodeVisitor v) {
         v.visit(this);
     }
-    
+
     public static class SoftwareComponentBuilder extends RootNodeBuilder {
     }
 }

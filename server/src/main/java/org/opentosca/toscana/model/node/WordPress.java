@@ -2,9 +2,12 @@ package org.opentosca.toscana.model.node;
 
 import java.util.Objects;
 
+import org.opentosca.toscana.model.capability.DatabaseEndpointCapability;
 import org.opentosca.toscana.model.capability.EndpointCapability;
 import org.opentosca.toscana.model.operation.StandardLifecycle;
+import org.opentosca.toscana.model.relation.ConnectsTo;
 import org.opentosca.toscana.model.requirement.DatabaseEndpointRequirement;
+import org.opentosca.toscana.model.requirement.Requirement;
 import org.opentosca.toscana.model.requirement.WebServerRequirement;
 import org.opentosca.toscana.model.visitor.NodeVisitor;
 
@@ -23,13 +26,13 @@ public class WordPress extends WebApplication {
 
     private final String dbHost;
 
-    private final DatabaseEndpointRequirement databaseEndpoint;
+    private final Requirement<DatabaseEndpointCapability, Database, ConnectsTo> databaseEndpoint;
 
     @Builder
     protected WordPress(String adminUser,
                         String adminPassword,
                         String dbHost,
-                        DatabaseEndpointRequirement databaseEndpoint,
+                        Requirement<DatabaseEndpointCapability, Database, ConnectsTo> databaseEndpoint,
                         String contextRoot,
                         EndpointCapability endpoint,
                         WebServerRequirement host,
@@ -46,17 +49,17 @@ public class WordPress extends WebApplication {
     }
 
     /**
-     @param nodeName         {@link #nodeName}
-     @param adminUser        {@link #adminUser}
-     @param adminPassword    {@link #adminPassword}
-     @param dbHost           {@link #dbHost}
-     @param endpoint         {@link WebApplication#appEndpoint}
+     @param nodeName      {@link #nodeName}
+     @param adminUser     {@link #adminUser}
+     @param adminPassword {@link #adminPassword}
+     @param dbHost        {@link #dbHost}
+     @param endpoint      {@link WebApplication#appEndpoint}
      */
     public static WordPressBuilder builder(String nodeName,
                                            String adminUser,
                                            String adminPassword,
                                            String dbHost,
-                                           EndpointCapability endpoint){
+                                           EndpointCapability endpoint) {
         return (WordPressBuilder) new WordPressBuilder()
             .nodeName(nodeName)
             .adminUser(adminUser)

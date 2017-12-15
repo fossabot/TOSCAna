@@ -7,7 +7,8 @@ import org.opentosca.toscana.model.capability.ContainerCapability;
 import org.opentosca.toscana.model.capability.EndpointCapability;
 import org.opentosca.toscana.model.datatype.Credential;
 import org.opentosca.toscana.model.operation.StandardLifecycle;
-import org.opentosca.toscana.model.requirement.HostRequirement;
+import org.opentosca.toscana.model.relation.HostedOn;
+import org.opentosca.toscana.model.requirement.Requirement;
 import org.opentosca.toscana.model.visitor.NodeVisitor;
 
 import lombok.Builder;
@@ -33,7 +34,7 @@ public class WebServer extends SoftwareComponent {
     @Builder
     protected WebServer(String componentVersion,
                         Credential adminCredential,
-                        HostRequirement host,
+                        Requirement<ContainerCapability, Compute, HostedOn> host,
                         ContainerCapability containerHost,
                         EndpointCapability dataEndpoint,
                         AdminEndpointCapability adminEndpoint,

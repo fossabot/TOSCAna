@@ -22,7 +22,7 @@ public class DbmsRequirement extends Requirement<ContainerCapability, Dbms, Host
         super(capability, occurrence, fulfillers, HostedOn.getFallback(relationship));
     }
 
-    public static DbmsRequirement getFallback(DbmsRequirement host) {
+    public static Requirement<ContainerCapability, Dbms, HostedOn> getFallback(Requirement<ContainerCapability, Dbms, HostedOn> host) {
         return (host == null) ? DbmsRequirement.builder().build() : host;
     }
 

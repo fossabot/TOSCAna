@@ -45,6 +45,6 @@ public class ConnectsTo extends RootRelationship {
         v.visit(this);
     }
 
-    public static class ConnectsToBuilder extends DescribableEntityBuilder {
+    public static class ConnectsToBuilder extends RootRelationshipBuilder {
     }
 }

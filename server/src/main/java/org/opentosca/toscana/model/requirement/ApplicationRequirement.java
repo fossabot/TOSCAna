@@ -29,7 +29,7 @@ public class ApplicationRequirement extends Requirement<EndpointCapability, Root
             .relationship(relationship);
     }
 
-    public static ApplicationRequirement getFallback(ApplicationRequirement application) {
+    public static Requirement<EndpointCapability, RootNode, RoutesTo> getFallback(Requirement<EndpointCapability, RootNode, RoutesTo> application) {
         return (application == null) ? ApplicationRequirement.builder(new RoutesTo()).build() : application;
     }
 

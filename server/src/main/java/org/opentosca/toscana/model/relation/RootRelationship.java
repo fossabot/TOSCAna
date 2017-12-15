@@ -3,6 +3,7 @@ package org.opentosca.toscana.model.relation;
 import org.opentosca.toscana.model.DescribableEntity;
 import org.opentosca.toscana.model.visitor.VisitableRelationship;
 
+import lombok.Builder;
 import lombok.Data;
 
 /**
@@ -12,7 +13,16 @@ import lombok.Data;
 @Data
 public abstract class RootRelationship extends DescribableEntity implements VisitableRelationship {
 
+    @Builder
     protected RootRelationship(String description) {
         super(description);
+    }
+
+    public static class RootRelationshipBuilder extends DescribableEntityBuilder {
+
+        public RootRelationship build() {
+            // should never happen, is abstract
+            return null;
+        }
     }
 }

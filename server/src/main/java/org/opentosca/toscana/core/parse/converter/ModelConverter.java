@@ -4,7 +4,9 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
+import org.opentosca.toscana.core.parse.converter.visitor.ConversionResult;
 import org.opentosca.toscana.core.parse.converter.visitor.RepositoryVisitor;
 import org.opentosca.toscana.core.parse.converter.visitor.SetResult;
 import org.opentosca.toscana.model.EffectiveModel;
@@ -31,8 +33,8 @@ public class ModelConverter {
     public EffectiveModel convert(TServiceTemplate serviceTemplate) throws UnknownNodeTypeException {
         logger.debug("Convert service template to normative model");
         Set<Repository> repositories = getRepositories(serviceTemplate);
-        Set<RootNode> nodes = convertNodeTemplates(serviceTemplate.getTopologyTemplate(), repositories);
-        fulfillRequirements(nodes);
+        Set<ConversionResult<RootNode>> result = convertNodeTemplates(serviceTemplate.getTopologyTemplate(), repositories);
+        Set<RootNode> nodes = fulfillRequirements(result);
         return new EffectiveModel(nodes);
     }
 
@@ -43,7 +45,7 @@ public class ModelConverter {
         return repositories;
     }
 
-    private Set<RootNode> convertNodeTemplates(TTopologyTemplateDefinition topology, Set<Repository> repositories) throws UnknownNodeTypeException {
+    private Set<ConversionResult<RootNode>> convertNodeTemplates(TTopologyTemplateDefinition topology, Set<Repository> repositories) throws UnknownNodeTypeException {
         Map<String, TNodeTemplate> templateMap;
         if (topology != null) {
             templateMap = topology.getNodeTemplates();
@@ -52,16 +54,26 @@ public class ModelConverter {
             templateMap = new HashMap<>();
         }
 
-        Set<RootNode> nodes = new HashSet<>();
+        Set<ConversionResult<RootNode>> results = new HashSet<>();
         NodeConverter nodeConverter = new NodeConverter(repositories, logger);
         for (Map.Entry<String, TNodeTemplate> entry : templateMap.entrySet()) {
-            RootNode node = nodeConverter.convert(entry.getKey(), entry.getValue());
-            nodes.add(node);
+            ConversionResult<RootNode> conversionResult = nodeConverter.convert(entry.getKey(), entry.getValue());
+            results.add(conversionResult);
         }
-        return nodes;
+        return results;
     }
 
-    private void fulfillRequirements(Set<RootNode> nodes) {
-        
+    private Set<RootNode> fulfillRequirements(Set<ConversionResult<RootNode>> results) {
+        for (ConversionResult<RootNode> result : results){
+            for (RequirementConversion requirementConversion : result.getRequirementConversions()){
+                for (ConversionResult<RootNode> potentialFulfiller : results){
+                    String nodeName = potentialFulfiller.getResult().getNodeName();
+                    if (requirementConversion.fulfiller.equals(nodeName)){
+                        requirementConversion.requirement.getFulfillers().add(potentialFulfiller.getResult());
+                    }
+                }
+            }
+        }
+        return results.stream().map(result -> result.getResult()).collect(Collectors.toSet());
     }
 }

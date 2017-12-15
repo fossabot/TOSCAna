@@ -48,6 +48,7 @@ import org.opentosca.toscana.model.node.DockerApplication.DockerApplicationBuild
 import org.opentosca.toscana.model.node.LoadBalancer;
 import org.opentosca.toscana.model.node.LoadBalancer.LoadBalancerBuilder;
 import org.opentosca.toscana.model.node.MysqlDatabase;
+import org.opentosca.toscana.model.node.MysqlDatabase.MysqlDatabaseBuilder;
 import org.opentosca.toscana.model.node.MysqlDbms;
 import org.opentosca.toscana.model.node.MysqlDbms.MysqlDbmsBuilder;
 import org.opentosca.toscana.model.node.Nodejs;
@@ -77,38 +78,38 @@ class NodeConverter {
     private final Set<Repository> repositories;
     private final Logger logger;
 
-    private Map<String, BiFunction<String, TNodeTemplate, RootNode>> conversionMap = new HashMap<>();
+    private Map<String, ConversionType> conversionMap = new HashMap<>();
 
     NodeConverter(Set<Repository> repositories, Logger logger) {
         this.repositories = repositories;
         this.logger = logger;
-        addRule("Compute", this::toCompute);
-        addRule("Container.Application", this::toContainerApplication);
-        addRule("Container.Runtime", this::toContainerRuntime);
-        addRule("Storage", "BlockStorage", this::toBlockStorage);
-        addRule("Database", this::toDatabase);
-        addRule("Database.MySQL", this::toMysqlDbms);
-        addRule("Container", "Application.Docker", this::toDockerApplication);
-        addRule("DBMS", this::toDbms);
-        addRule("DBMS.MySQL", this::toMysqlDbms);
-        addRule("LoadBalancer", this::toLoadBalancer);
-        addRule("Storage", "ObjectStorage", this::toObjectStorage);
-        addRule("SoftwareComponent", this::toSoftwareComponent);
-        addRule("WebApplication", this::toWebApplication);
-        addRule("WebApplication", "WordPress", this::toWordPress);
-        addRule("WebServer", this::toWebServer);
-        addRule("WebServer", "Apache", this::toApache);
-        addRule("WebServer", "Nodejs", this::toNodejs);
+        addRule("Compute", new ConversionType(ComputeBuilder.class, new ComputeVisitor()));
+        addRule("Container.Application", new ConversionType(ContainerApplicationBuilder.class, new ContainerApplicationVisitor()));
+        addRule("Container.Runtime", new ConversionType(ContainerRuntimeBuilder.class, new ContainerRuntimeVisitor()));
+        addRule("Storage", "BlockStorage", new ConversionType(BlockStorageBuilder.class, new BlockStorageVisitor()));
+        addRule("Database", new ConversionType(DatabaseBuilder.class, new DatabaseVisitor()));
+        addRule("Database.MySQL", new ConversionType(MysqlDatabaseBuilder.class, new MysqlDatabaseVisitor()));
+        addRule("Container", "Application.Docker", new ConversionType(DockerApplicationBuilder.class, new DockerApplicationVisitor()));
+        addRule("DBMS", new ConversionType(DbmsBuilder.class, new DbmsVisitor()));
+        addRule("DBMS.MySQL", new ConversionType(MysqlDbmsBuilder.class, new MysqlDbmsVisitor()));
+        addRule("LoadBalancer", new ConversionType(LoadBalancerBuilder.class, new LoadBalancerVisitor()));
+        addRule("Storage", "ObjectStorage", new ConversionType(ObjectStorageBuilder.class, new ObjectStorageVisitor()));
+        addRule("SoftwareComponent", new ConversionType(SoftwareComponentBuilder.class, new SoftwareComponentVisitor()));
+        addRule("WebApplication", new ConversionType(WebApplicationBuilder.class, new WebApplicationVisitor()));
+        addRule("WebApplication", "WordPress", new ConversionType(WordPressBuilder.class, new WordPressVisitor()));
+        addRule("WebServer", new ConversionType(WebServerBuilder.class, new WebServerVisitor()));
+        addRule("WebServer", "Apache", new ConversionType(ApacheBuilder.class, new ApacheVisitor()));
+        addRule("WebServer", "Nodejs", new ConversionType(Nodejs.class, new NodejsVisitor()));
     }
 
     /**
      Establishes a correlation between a node type (string) and its construction method.
 
      @param simpleType the shorthand type of a node (e.g.: "Compute")
-     @param conversion the conversion method which is used to construct an (EffectiveModel) node
+     @param type the type of builder class and visitor class which is applied for given simpletype
      */
-    private void addRule(String simpleType, BiFunction<String, TNodeTemplate, RootNode> conversion) {
-        addRule(null, simpleType, conversion);
+    private void addRule(String simpleType, ConversionType type) {
+        addRule(null, simpleType, type);
     }
 
     /**
@@ -116,11 +117,11 @@ class NodeConverter {
 
      @param simpleType {@link #addRule}
      @param typePrefix the prefix needed to construct the full type name: {@code tosca.nodes.<typePrefix>.<simpleType>}
-     @param conversion {@link #addRule}
+     @param type {@link #addRule}
      */
-    private void addRule(String typePrefix, String simpleType, BiFunction<String, TNodeTemplate, RootNode> conversion) {
+    private void addRule(String typePrefix, String simpleType, ConversionType type) {
         Set<String> typeSet = getTypes(simpleType, typePrefix);
-        typeSet.forEach(typeName -> conversionMap.put(typeName, conversion));
+        typeSet.forEach(typeName -> conversionMap.put(typeName, type));
     }
 
     private Set<String> getTypes(String simpleName, String prefix) {
@@ -128,16 +129,16 @@ class NodeConverter {
         return Sets.newHashSet(simpleName, TOSCA_PREFIX + typePrefix + simpleName);
     }
 
-    RootNode convert(String name, TNodeTemplate template) throws UnknownNodeTypeException {
+    ConversionResult<RootNode> convert(String name, TNodeTemplate template) throws UnknownNodeTypeException {
         String nodeType = template.getType().getLocalPart();
         logger.debug("> Convert node template '{}' (type: '{}')", name, nodeType);
-        BiFunction<String, TNodeTemplate, RootNode> conversion = conversionMap.get(nodeType);
-        if (conversion == null) {
+        ConversionType type = conversionMap.get(nodeType);
+        if (type == null) {
             throw new UnknownNodeTypeException(String.format(
                 "Node type '%s' is not supported by the internal model", template.getType()));
         }
         try {
-            return conversion.apply(name, template);
+            return toNode(name, template, type.builderClass, type.visitor);
         } catch (UnsupportedOperationException e) {
             throw new UnsupportedOperationException(
                 String.format("Converting node templates of type '%s' not yet supported",
@@ -147,10 +148,9 @@ class NodeConverter {
 
     private <NodeT extends DescribableEntity, BuilderT extends DescribableEntityBuilder,
         VisitorT extends DescribableVisitor<NodeT, BuilderT>>
-    NodeT toNode(String name, TNodeTemplate template, Class<BuilderT> builderType, VisitorT visitor) {
+    ConversionResult<NodeT> toNode(String name, TNodeTemplate template, Class<BuilderT> builderType, VisitorT visitor) {
         NodeContext<BuilderT> context = new NodeContext<>(name, newInstance(builderType), repositories);
-        ConversionResult<NodeT> result = visitor.visit(template, context);
-        return result.getResult();
+        return visitor.visit(template, context);
     }
 
     <NodeT> NodeT newInstance(Class clazz) {
@@ -164,67 +164,14 @@ class NodeConverter {
         }
     }
 
-    private Apache toApache(String name, TNodeTemplate template) {
-        return toNode(name, template, ApacheBuilder.class, new ApacheVisitor());
-    }
-
-    private BlockStorage toBlockStorage(String name, TNodeTemplate template) {
-        return toNode(name, template, BlockStorageBuilder.class, new BlockStorageVisitor<>());
-    }
-
-    private Compute toCompute(String name, TNodeTemplate template) {
-        return toNode(name, template, ComputeBuilder.class, new ComputeVisitor<>());
-    }
-
-    private ContainerApplication toContainerApplication(String name, TNodeTemplate template) {
-        return toNode(name, template, ContainerApplicationBuilder.class, new ContainerApplicationVisitor<>());
-    }
-
-    private ContainerRuntime toContainerRuntime(String name, TNodeTemplate template) {
-        return toNode(name, template, ContainerRuntimeBuilder.class, new ContainerRuntimeVisitor());
-    }
-
-    private Database toDatabase(String name, TNodeTemplate template) {
-        return toNode(name, template, DatabaseBuilder.class, new DatabaseVisitor());
-    }
-
-    private Dbms toDbms(String name, TNodeTemplate template) {
-        return toNode(name, template, DbmsBuilder.class, new DbmsVisitor<>());
-    }
-
-    private DockerApplication toDockerApplication(String name, TNodeTemplate template) {
-        return toNode(name, template, DockerApplicationBuilder.class, new DockerApplicationVisitor());
-    }
-
-    private LoadBalancer toLoadBalancer(String name, TNodeTemplate template) {
-        return toNode(name, template, LoadBalancerBuilder.class, new LoadBalancerVisitor<>());
-    }
-
-    private MysqlDbms toMysqlDbms(String name, TNodeTemplate template) {
-        return toNode(name, template, MysqlDbmsBuilder.class, new MysqlDbmsVisitor<>());
-    }
-
-    private Nodejs toNodejs(String name, TNodeTemplate template) {
-        return toNode(name, template, NodejsBuilder.class, new NodejsVisitor<>());
-    }
-
-    private ObjectStorage toObjectStorage(String name, TNodeTemplate template) {
-        return toNode(name, template, ObjectStorageBuilder.class, new ObjectStorageVisitor<>());
-    }
-
-    private SoftwareComponent toSoftwareComponent(String name, TNodeTemplate template) {
-        return toNode(name, template, SoftwareComponentBuilder.class, new SoftwareComponentVisitor());
-    }
-
-    private WebApplication toWebApplication(String name, TNodeTemplate template) {
-        return toNode(name, template, WebApplicationBuilder.class, new WebApplicationVisitor());
-    }
-
-    private WebServer toWebServer(String name, TNodeTemplate template) {
-        return toNode(name, template, WebServerBuilder.class, new WebServerVisitor());
-    }
-
-    private WordPress toWordPress(String name, TNodeTemplate template) {
-        return toNode(name, template, WordPressBuilder.class, new WordPressVisitor());
+    private static class ConversionType<VisitorT extends DescribableVisitor> {
+        public final Class<? extends DescribableEntityBuilder> builderClass;
+        public final VisitorT visitor;
+        
+        private ConversionType(Class<? extends DescribableEntityBuilder> builderClass, VisitorT visitor){
+            this.builderClass = builderClass;
+            this.visitor = visitor;
+        }
+        
     }
 }

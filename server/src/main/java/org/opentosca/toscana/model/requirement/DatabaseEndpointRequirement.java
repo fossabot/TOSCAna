@@ -27,7 +27,7 @@ public class DatabaseEndpointRequirement extends Requirement<DatabaseEndpointCap
             .relationship(relationship);
     }
 
-    public static DatabaseEndpointRequirement getFallback(DatabaseEndpointRequirement databaseEndpoint) {
+    public static Requirement<DatabaseEndpointCapability, Database, ConnectsTo> getFallback(Requirement<DatabaseEndpointCapability, Database, ConnectsTo> databaseEndpoint) {
         return (databaseEndpoint == null) ? DatabaseEndpointRequirement.builder(new ConnectsTo()).build() : databaseEndpoint;
     }
 
