@@ -5,8 +5,8 @@ import java.io.File;
 import org.opentosca.toscana.IntegrationTest;
 import org.opentosca.toscana.core.transformation.TransformationContext;
 import org.opentosca.toscana.plugins.kubernetes.docker.BaseDockerfileTest;
+import org.opentosca.toscana.plugins.kubernetes.docker.DockerTestUtils;
 
-import com.spotify.docker.client.DefaultDockerClient;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.slf4j.Logger;
@@ -26,7 +26,7 @@ public class DockerImageBuilderIT extends BaseDockerfileTest {
 
     @Test
     public void testBuildShaImage() throws Exception {
-        assumeTrue(isDockerAvailable());
+        assumeTrue(DockerTestUtils.isDockerAvailable());
         //Create Dockerfile and the corresponding Binary file
         buildSHADockerfile();
 
@@ -35,31 +35,17 @@ public class DockerImageBuilderIT extends BaseDockerfileTest {
         when(ctx.getLogger((Class<?>) any(Class.class))).thenReturn(LoggerFactory.getLogger("Mock Logger"));
 
         DockerImageBuilder imageBuilder = new DockerImageBuilder(
+            SHA_TEST_FILE_NAME,
             "toscana/sha256-test:test",
             WORKING_DIR_SUBFOLDER_NAME,
             ctx
         );
-        imageBuilder.buildImage(SHA_TEST_FILE_NAME);
+        imageBuilder.buildImage();
+        imageBuilder.storeImage();
+        imageBuilder.cleanup();
 
         File d = new File(access.getAbsolutePath(SHA_TEST_FILE_NAME));
 
         assertTrue(d.length() > 120 * 1024 * 1024);
-    }
-
-    private boolean isDockerAvailable() {
-//        //This is a Quick solution to prevent this test from beeing executed if the environment variable is not set.
-//        //TODO Remove if there is Proper differing between integration and unit tests.
-//        String env = System.getenv("TEST_DOCKER");
-//        if (env == null || !env.equalsIgnoreCase("true")) {
-//            return false;
-//        }
-        try {
-            if (DefaultDockerClient.fromEnv().build() == null) {
-                return false;
-            }
-        } catch (Exception e) {
-            return false;
-        }
-        return true;
     }
 }

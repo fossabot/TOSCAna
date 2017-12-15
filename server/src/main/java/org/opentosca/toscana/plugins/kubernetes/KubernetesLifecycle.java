@@ -134,9 +134,11 @@ public class KubernetesLifecycle extends AbstractLifecycle {
         logger.info("Building Docker images");
         stacks.forEach(e -> {
             logger.info("Building {}", e);
-            DockerImageBuilder builder = new DockerImageBuilder(e.getStackName(), e.getDockerfilePath().get(), context);
+            DockerImageBuilder builder = new DockerImageBuilder("output/docker/" + e.getStackName() + ".tar.gz",e.getStackName(), e.getDockerfilePath().get(), context);
             try {
-                builder.buildImage("output/docker/" + e.getStackName() + ".tar.gz");
+                builder.buildImage();
+                builder.storeImage();
+                builder.cleanup();
             } catch (Exception ex) {
                 ex.printStackTrace();
                 throw new TransformationFailureException("Transformation Failed", ex);
