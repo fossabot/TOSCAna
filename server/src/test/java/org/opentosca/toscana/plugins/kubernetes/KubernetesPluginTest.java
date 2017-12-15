@@ -43,6 +43,12 @@ public class KubernetesPluginTest extends BaseUnitTest {
         plugin.transform(context);
     }
 
+    @Test
+    public void transformationTest() throws Exception {
+        TransformationContext context = setUpMockTransformationContext(TestEffectiveModels.getLampModel());
+        plugin.transform(context);
+    }
+
     private TransformationContext setUpMockTransformationContext(EffectiveModel model) throws IOException {
         TransformationContext context = mock(TransformationContext.class);
         PluginFileAccess pluginFileAccess = mock(PluginFileAccess.class);

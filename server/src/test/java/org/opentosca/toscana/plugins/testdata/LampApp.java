@@ -5,7 +5,6 @@ import java.util.Set;
 
 import org.opentosca.toscana.model.capability.AdminEndpointCapability;
 import org.opentosca.toscana.model.capability.ContainerCapability;
-import org.opentosca.toscana.model.capability.ContainerCapability.ContainerCapabilityBuilder;
 import org.opentosca.toscana.model.capability.DatabaseEndpointCapability;
 import org.opentosca.toscana.model.capability.EndpointCapability;
 import org.opentosca.toscana.model.capability.OsCapability;
@@ -21,30 +20,34 @@ import org.opentosca.toscana.model.operation.OperationVariable;
 import org.opentosca.toscana.model.operation.StandardLifecycle;
 import org.opentosca.toscana.model.relation.AttachesTo;
 import org.opentosca.toscana.model.requirement.BlockStorageRequirement;
+import org.opentosca.toscana.model.requirement.HostRequirement;
+import org.opentosca.toscana.model.requirement.MysqlDbmsRequirement;
+import org.opentosca.toscana.model.requirement.WebServerRequirement;
 
 public class LampApp {
 
     private final Set<RootNode> testNodes = new HashSet<>();
+
+    public static Set<RootNode> getLampModel() {
+        return new LampApp().getLampApp();
+    }
 
     public Set<RootNode> getLampApp() {
         createLampModel();
         return testNodes;
     }
 
-    public static Set<RootNode> getLampModel() {
-        return new LampApp().getLampApp();
-    }
-
     private void createLampModel() {
 
-        testNodes.add(createComputeNode());
-        testNodes.add(createMysqlDbms());
-        testNodes.add(createMysqlDatabase());
-        testNodes.add(createApache());
-        testNodes.add(createWebApplication());
-    }
+        Set<Class<? extends RootNode>> validSourceTypes = new HashSet<>();
+        validSourceTypes.add(Compute.class);
+        validSourceTypes.add(MysqlDbms.class);
 
-    private Compute createComputeNode() {
+        ContainerCapability containerCapability = ContainerCapability.builder()
+            .memSizeInMB(1024)
+            .diskSizeInMB(2000)
+            .numCpus(1)
+            .validSourceTypes(validSourceTypes).build();
         AdminEndpointCapability computeAdminEndpointCap = AdminEndpointCapability
             .builder("127.0.0.1", new Port(80))
             .build();
@@ -62,26 +65,9 @@ public class LampApp {
             .build();
         Compute computeNode = Compute
             .builder("server", osCapability, computeAdminEndpointCap, localStorage)
-            .host(createContainerCapability())
+            .host(containerCapability)
             .build();
-        return computeNode;
-    }
 
-    private ContainerCapability createContainerCapability() {
-        Set<Class<? extends RootNode>> validSourceTypes = new HashSet<>();
-        validSourceTypes.add(Compute.class);
-        validSourceTypes.add(MysqlDbms.class);
-
-        ContainerCapabilityBuilder containerCapabilityBuilder = ContainerCapability.builder()
-            .memSizeInMB(1024)
-            .diskSizeInMB(2000)
-            .numCpus(1)
-            .validSourceTypes(validSourceTypes);
-
-        return containerCapabilityBuilder.build();
-    }
-
-    private MysqlDbms createMysqlDbms() {
         Operation dbmsOperation = Operation.builder()
             .implementationArtifact("mysql_dbms/mysql_dbms_configure.sh")
             .input(new OperationVariable("db_root_password"))
@@ -96,24 +82,16 @@ public class LampApp {
             "geheim")
             .port(3306)
             .lifecycle(lifecycle)
+            .host(HostRequirement.builder().fulfiller(computeNode).build())
             .build();
 
-        return mysqlDbms;
-    }
-
-    private MysqlDatabase createMysqlDatabase() {
         DatabaseEndpointCapability dbEndpointCapability = DatabaseEndpointCapability
             .builder("127.0.0.1", new Port(3306))
             .build();
         MysqlDatabase mydb = MysqlDatabase
-            .builder("my_db", "DBNAME", dbEndpointCapability)
+            .builder("my_db", "DBNAME", dbEndpointCapability).host(MysqlDbmsRequirement.builder().fulfiller(mysqlDbms).build())
             .build();
 
-        return mydb;
-    }
-
-    private Apache createApache() {
-        ContainerCapability containerCapability = createContainerCapability();
         DatabaseEndpointCapability apacheEndpoint = DatabaseEndpointCapability
             .builder("127.0.0.1", new Port(3306))
             .build();
@@ -127,12 +105,9 @@ public class LampApp {
             apacheEndpoint,
             adminEndpointCapability)
             .databaseEndpoint(apacheEndpoint)
+            .host(HostRequirement.builder().fulfiller(computeNode).build())
             .build();
 
-        return webServer;
-    }
-
-    private WebApplication createWebApplication() {
         EndpointCapability endpointCapability = EndpointCapability
             .builder("127.0.0.1", new Port(80))
             .build();
@@ -162,11 +137,16 @@ public class LampApp {
             .create(appCreate)
             .configure(appConfigure)
             .build();
+        WebServerRequirement webServerRequirement = WebServerRequirement.builder().fulfiller(webServer).build();
         WebApplication webApplication = WebApplication
             .builder("my_app", endpointCapability)
             .standardLifecycle(webAppLifecycle)
+            .host(webServerRequirement)
             .build();
-
-        return webApplication;
+        testNodes.add(webServer);
+        testNodes.add(webApplication);
+        testNodes.add(computeNode);
+        testNodes.add(mydb);
+        testNodes.add(mysqlDbms);
     }
 }

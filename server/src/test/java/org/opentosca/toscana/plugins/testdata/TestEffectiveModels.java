@@ -6,7 +6,6 @@ import java.util.Set;
 import org.opentosca.toscana.model.EffectiveModel;
 import org.opentosca.toscana.model.capability.AdminEndpointCapability;
 import org.opentosca.toscana.model.capability.ContainerCapability;
-import org.opentosca.toscana.model.capability.DockerContainerCapability;
 import org.opentosca.toscana.model.capability.EndpointCapability;
 import org.opentosca.toscana.model.capability.OsCapability;
 import org.opentosca.toscana.model.datatype.Port;
@@ -18,6 +17,7 @@ import org.opentosca.toscana.model.relation.AttachesTo;
 import org.opentosca.toscana.model.requirement.BlockStorageRequirement;
 import org.opentosca.toscana.model.requirement.DockerHostRequirement;
 import org.opentosca.toscana.model.requirement.EndpointRequirement;
+import org.opentosca.toscana.model.requirement.HostRequirement;
 import org.opentosca.toscana.model.requirement.StorageRequirement;
 
 import com.google.common.collect.Sets;
@@ -54,11 +54,28 @@ public class TestEffectiveModels {
     }
 
     public static EffectiveModel getMinimalDockerModel() {
-        DockerContainerCapability containerCapability = DockerContainerCapability.builder().build();
+        AdminEndpointCapability computeAdminEndpointCap = AdminEndpointCapability
+            .builder("127.0.0.1", new Port(80))
+            .build();
+        AttachesTo attachesTo = AttachesTo
+            .builder("mount")
+            .build();
+        BlockStorageRequirement localStorage = BlockStorageRequirement
+            .builder(attachesTo)
+            .build();
+        OsCapability osCapability = OsCapability
+            .builder()
+            .distribution(OsCapability.Distribution.UBUNTU)
+            .type(OsCapability.Type.LINUX)
+            .version("16.04")
+            .build();
+        Compute computeNode = Compute
+            .builder("server", osCapability, computeAdminEndpointCap, localStorage)
+            .build();
+        HostRequirement hostRequirement = HostRequirement.builder().fulfiller(computeNode).build();
         ContainerRuntime dockerRuntime = ContainerRuntime
-            .builder("dockerRuntime").
-                containerHost(containerCapability).
-                build();
+            .builder("dockerRuntime").host(hostRequirement)
+            .build();
         DockerHostRequirement host = DockerHostRequirement
             .builder()
             .fulfiller(dockerRuntime)
@@ -69,9 +86,6 @@ public class TestEffectiveModels {
         EndpointRequirement network = EndpointRequirement.
             builder(endpointCapability)
             .build();
-        AttachesTo attachesTo = AttachesTo
-            .builder("/")
-            .build();
         StorageRequirement storage = StorageRequirement
             .builder(attachesTo)
             .build();
@@ -79,9 +93,8 @@ public class TestEffectiveModels {
             .builder("simpleTaskApp", network)
             .host(host)
             .build();
-        return new EffectiveModel(Sets.newHashSet(simpleTaskApp, dockerRuntime));
+        return new EffectiveModel(Sets.newHashSet(simpleTaskApp, dockerRuntime, computeNode));
     }
-    
 
     public static EffectiveModel getLampModel() {
         return new EffectiveModel(new LampApp().getLampApp());

@@ -31,7 +31,6 @@ public class EffectiveModel {
             for (Requirement requirement : node.getRequirements()) {
                 for (Object o : requirement.getFulfillers()) {
                     RootNode fulfiller = (RootNode) o;
-
                     topology.addEdge(node, fulfiller, requirement.getRelationship());
                 }
             }
