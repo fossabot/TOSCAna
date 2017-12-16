@@ -11,14 +11,14 @@ import org.apache.commons.io.IOUtils;
 /**
  This class allows the automatic building of a dockerfile if a docker daemon is available.
  */
-public class DockerImageBuilder extends ImageBuilder {
+public class ExportingImageBuilder extends ImageBuilder {
 
     private final String outputPath;
 
     /**
      @param outputPath the path to which the tar file should be written.
      */
-    public DockerImageBuilder(String outputPath, String tag, String dockerWorkDir, TransformationContext ctx) {
+    public ExportingImageBuilder(String outputPath, String tag, String dockerWorkDir, TransformationContext ctx) {
         super(tag, dockerWorkDir, ctx);
         this.outputPath = outputPath;
     }

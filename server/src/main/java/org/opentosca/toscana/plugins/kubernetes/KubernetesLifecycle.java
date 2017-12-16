@@ -13,7 +13,7 @@ import org.opentosca.toscana.core.transformation.TransformationContext;
 import org.opentosca.toscana.model.EffectiveModel;
 import org.opentosca.toscana.model.node.Compute;
 import org.opentosca.toscana.model.node.RootNode;
-import org.opentosca.toscana.plugins.kubernetes.docker.image.DockerImageBuilder;
+import org.opentosca.toscana.plugins.kubernetes.docker.image.ExportingImageBuilder;
 import org.opentosca.toscana.plugins.kubernetes.docker.mapper.BaseImageMapper;
 import org.opentosca.toscana.plugins.kubernetes.exceptions.UnsupportedOsTypeException;
 import org.opentosca.toscana.plugins.kubernetes.util.KubernetesNodeContainer;
@@ -134,7 +134,7 @@ public class KubernetesLifecycle extends AbstractLifecycle {
         logger.info("Building Docker images");
         stacks.forEach(e -> {
             logger.info("Building {}", e);
-            DockerImageBuilder builder = new DockerImageBuilder("output/docker/" + e.getStackName() + ".tar.gz",e.getStackName(), e.getDockerfilePath().get(), context);
+            ExportingImageBuilder builder = new ExportingImageBuilder("output/docker/" + e.getStackName() + ".tar.gz",e.getStackName(), e.getDockerfilePath().get(), context);
             try {
                 builder.buildImage();
                 builder.storeImage();

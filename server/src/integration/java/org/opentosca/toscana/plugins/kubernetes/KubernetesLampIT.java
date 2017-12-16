@@ -54,11 +54,12 @@ public class KubernetesLampIT extends BaseTransformTest {
     protected PropertyInstance getProperties() {
         PropertyInstance props = new PropertyInstance(plugin.getPlatform().properties, mock(Transformation.class));
 
-        props.setPropertyValue(KubernetesPlugin.DOCKER_REGISTRY_URL_PROPERTY_KEY, MapperConstants.DOCKER_HUB_URL);
-        props.setPropertyValue(KubernetesPlugin.DOCKER_PUSH_TO_REGISTRY_PROPERTY_KEY, "true");
-        props.setPropertyValue(KubernetesPlugin.DOCKER_REGISTRY_REPOSITORY_PROPERTY_KEY, System.getenv("DH_REPOSITORY"));
-        props.setPropertyValue(KubernetesPlugin.DOCKER_REGISTRY_USERNAME_PROPERTY_KEY, System.getenv("DH_USERNAME"));
-        props.setPropertyValue(KubernetesPlugin.DOCKER_REGISTRY_PASSWORD_PROPERTY_KEY, System.getenv("DH_PASSWORD"));
+        //This Transformation is performed by storing the files in Tar archives
+        props.setPropertyValue(KubernetesPlugin.DOCKER_PUSH_TO_REGISTRY_PROPERTY_KEY, "false");
+//        props.setPropertyValue(KubernetesPlugin.DOCKER_REGISTRY_URL_PROPERTY_KEY, MapperConstants.DOCKER_HUB_URL);
+//        props.setPropertyValue(KubernetesPlugin.DOCKER_REGISTRY_REPOSITORY_PROPERTY_KEY, System.getenv("DH_REPOSITORY"));
+//        props.setPropertyValue(KubernetesPlugin.DOCKER_REGISTRY_USERNAME_PROPERTY_KEY, System.getenv("DH_USERNAME"));
+//        props.setPropertyValue(KubernetesPlugin.DOCKER_REGISTRY_PASSWORD_PROPERTY_KEY, System.getenv("DH_PASSWORD"));
 
         return props;
     }

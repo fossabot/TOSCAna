@@ -19,9 +19,9 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 @Category(IntegrationTest.class)
-public class DockerImageBuilderIT extends BaseDockerfileTest {
+public class ExportingImageBuilderIT extends BaseDockerfileTest {
 
-    private static final Logger logger = LoggerFactory.getLogger(DockerImageBuilderIT.class);
+    private static final Logger logger = LoggerFactory.getLogger(ExportingImageBuilderIT.class);
     private static final String SHA_TEST_FILE_NAME = "sha-test.tar.gz";
 
     @Test
@@ -30,20 +30,36 @@ public class DockerImageBuilderIT extends BaseDockerfileTest {
         //Create Dockerfile and the corresponding Binary file
         buildSHADockerfile();
 
+        init();
+        
         TransformationContext ctx = mock(TransformationContext.class);
         when(ctx.getPluginFileAccess()).thenReturn(access);
         when(ctx.getLogger((Class<?>) any(Class.class))).thenReturn(LoggerFactory.getLogger("Mock Logger"));
-
-        DockerImageBuilder imageBuilder = new DockerImageBuilder(
+        
+        ImageBuilder imageBuilder = instantiateImageBuilder(ctx);
+        logger.info("Building Image");
+        imageBuilder.buildImage();
+        logger.info("Storing Image");
+        imageBuilder.storeImage();
+        logger.info("Cleanup");
+        imageBuilder.cleanup();
+        validate();
+    }
+    
+    public void init() {
+        // noop for this test
+    }
+    
+    public ImageBuilder instantiateImageBuilder(TransformationContext context) throws Exception {
+        return new ExportingImageBuilder(
             SHA_TEST_FILE_NAME,
             "toscana/sha256-test:test",
             WORKING_DIR_SUBFOLDER_NAME,
-            ctx
+            context
         );
-        imageBuilder.buildImage();
-        imageBuilder.storeImage();
-        imageBuilder.cleanup();
-
+    }
+    
+    public void validate() throws Exception {
         File d = new File(access.getAbsolutePath(SHA_TEST_FILE_NAME));
 
         assertTrue(d.length() > 120 * 1024 * 1024);

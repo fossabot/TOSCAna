@@ -5,10 +5,12 @@ import org.opentosca.toscana.plugins.kubernetes.docker.util.DockerRegistryCreden
 
 import com.spotify.docker.client.DockerClient;
 
-public class RegistryImagebuilder extends ImageBuilder {
+import static org.opentosca.toscana.plugins.kubernetes.docker.mapper.MapperConstants.DOCKER_HUB_URL;
+
+public class PushingImageBuilder extends ImageBuilder {
     private final DockerRegistryCredentials credentials;
 
-    public RegistryImagebuilder(
+    public PushingImageBuilder(
         DockerRegistryCredentials credentials,
         String tag,
         String dockerWorkDir,
@@ -19,10 +21,25 @@ public class RegistryImagebuilder extends ImageBuilder {
     }
 
     @Override
+    protected String getTag() {
+        String tag = String.format(
+            "%s%s/%s:%s",
+            credentials.getRegistryURL(),
+            credentials.getUsername(),
+            credentials.getRepository(),
+            super.getTag()
+        );
+
+        logger.info("The tag of the image built is '{}'", tag);
+
+        return tag;
+    }
+
+    @Override
     public void storeImage() throws Exception {
         DockerClient client = getDockerClient();
         client.auth(credentials.toAuthConfig());
-        
+
         client.push(getTag(), this);
     }
 }

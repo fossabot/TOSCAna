@@ -39,7 +39,7 @@ public abstract class ImageBuilder implements ProgressHandler {
 
         Path abs = Paths.get(access.getAbsolutePath(dockerWorkDir));
         // Build the image
-        String result = client.build(abs, tag, this);
+        String result = client.build(abs, getTag(), this);
         logger.info("Image build was successful. Image ID: {}", result);
     }
 
@@ -53,7 +53,7 @@ public abstract class ImageBuilder implements ProgressHandler {
         DockerClient client = getDockerClient();
         // Remove image to free the used space
         logger.info("Deleting image from local Storage");
-        client.removeImage(tag);
+        client.removeImage(getTag());
     }
 
     protected DockerClient getDockerClient() throws DockerCertificateException {
