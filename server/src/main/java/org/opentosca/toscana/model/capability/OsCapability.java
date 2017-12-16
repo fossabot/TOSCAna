@@ -18,22 +18,22 @@ import lombok.Data;
 public class OsCapability extends Capability {
 
     /**
-     The Operating System architecture.
+     The optional Operating System architecture.
      (TOSCA Simple Profile in YAML Version 1.1, p. 157)
      */
     private final Architecture architecture;
     /**
-     The Operating System type.
+     The optional Operating System type.
      (TOSCA Simple Profile in YAML Version 1.1, p. 157)
      */
     private final Type type;
     /**
-     The Operating System distribution.
+     The optional Operating System distribution.
      (TOSCA Simple Profile in YAML Version 1.1, p. 157)
      */
     private final Distribution distribution;
     /**
-     The Operating System version.
+     The optional Operating System version.
      (TOSCA Simple Profile in YAML Version 1.1, p. 157)
      */
     private final String version;
@@ -84,6 +84,10 @@ public class OsCapability extends Capability {
     @Override
     public void accept(CapabilityVisitor v) {
         v.visit(this);
+    }
+
+    public static OsCapability getFallback(OsCapability os) {
+        return (os == null) ? OsCapability.builder().build() : os;
     }
 
     public enum Architecture {

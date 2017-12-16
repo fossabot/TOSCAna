@@ -1,7 +1,6 @@
 package org.opentosca.toscana.model.node;
 
 import java.util.HashSet;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 
@@ -15,6 +14,7 @@ import org.opentosca.toscana.model.datatype.NetworkInfo;
 import org.opentosca.toscana.model.datatype.PortInfo;
 import org.opentosca.toscana.model.operation.StandardLifecycle;
 import org.opentosca.toscana.model.relation.AttachesTo;
+import org.opentosca.toscana.model.requirement.BlockStorageRequirement;
 import org.opentosca.toscana.model.requirement.Requirement;
 import org.opentosca.toscana.model.visitor.NodeVisitor;
 
@@ -82,12 +82,12 @@ public class Compute extends RootNode {
         super(nodeName, standardLifecycle, description);
         this.privateAddress = privateAddress;
         this.publicAddress = publicAddress;
-        this.os = Objects.requireNonNull(os);
-        this.adminEndpoint = Objects.requireNonNull(adminEndpoint);
+        this.os = OsCapability.getFallback(os);
+        this.adminEndpoint = AdminEndpointCapability.getFallback(adminEndpoint);
         this.host = (host == null) ? ContainerCapability.builder().build() : host;
         this.scalable = (scalable == null) ? ScalableCapability.builder().build() : scalable;
         this.binding = (binding == null) ? BindableCapability.builder().build() : binding;
-        this.localStorage = Objects.requireNonNull(localStorage);
+        this.localStorage = BlockStorageRequirement.getFallback(localStorage);
 
         capabilities.add(this.host);
         capabilities.add(this.os);
@@ -98,19 +98,11 @@ public class Compute extends RootNode {
     }
 
     /**
-     @param nodeName      {@link #nodeName}
-     @param adminEndpoint {@link #adminEndpoint}
-     @param localStorage  {@link #localStorage}
+     @param nodeName {@link #nodeName}
      */
-    public static ComputeBuilder builder(String nodeName,
-                                         OsCapability os,
-                                         AdminEndpointCapability adminEndpoint,
-                                         Requirement<AttachmentCapability, BlockStorage, AttachesTo> localStorage) {
+    public static ComputeBuilder builder(String nodeName) {
         return new ComputeBuilder()
-            .os(os)
-            .nodeName(nodeName)
-            .adminEndpoint(adminEndpoint)
-            .localStorage(localStorage);
+            .nodeName(nodeName);
     }
 
     /**

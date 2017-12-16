@@ -4,6 +4,7 @@ import java.util.Objects;
 
 import org.opentosca.toscana.model.capability.AdminEndpointCapability;
 import org.opentosca.toscana.model.capability.ContainerCapability;
+import org.opentosca.toscana.model.capability.DatabaseEndpointCapability;
 import org.opentosca.toscana.model.capability.EndpointCapability;
 import org.opentosca.toscana.model.datatype.Credential;
 import org.opentosca.toscana.model.operation.StandardLifecycle;
@@ -42,9 +43,9 @@ public class WebServer extends SoftwareComponent {
                         StandardLifecycle standardLifecycle,
                         String description) {
         super(componentVersion, adminCredential, host, nodeName, standardLifecycle, description);
-        this.containerHost = Objects.requireNonNull(containerHost);
-        this.dataEndpoint = Objects.requireNonNull(dataEndpoint);
-        this.adminEndpoint = Objects.requireNonNull(adminEndpoint);
+        this.containerHost = ContainerCapability.getFallback(containerHost);
+        this.dataEndpoint = DatabaseEndpointCapability.getFallback(dataEndpoint);
+        this.adminEndpoint = AdminEndpointCapability.getFallback(adminEndpoint);
 
         capabilities.add(this.containerHost);
         capabilities.add(this.dataEndpoint);
@@ -53,17 +54,14 @@ public class WebServer extends SoftwareComponent {
 
     /**
      @param nodeName      {@link #nodeName}
-     @param containerHost {@link #containerHost}
      @param dataEndpoint  {@link #dataEndpoint}
      @param adminEndpoint {@link #adminEndpoint}
      */
     public static WebServerBuilder builder(String nodeName,
-                                           ContainerCapability containerHost,
                                            EndpointCapability dataEndpoint,
                                            AdminEndpointCapability adminEndpoint) {
         return new WebServerBuilder()
             .nodeName(nodeName)
-            .containerHost(containerHost)
             .dataEndpoint(dataEndpoint)
             .adminEndpoint(adminEndpoint);
     }

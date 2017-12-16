@@ -39,15 +39,12 @@ public class MysqlDatabase extends Database {
     /**
      @param nodeName         {@link #nodeName}
      @param databaseName     {@link #databaseEndpoint}
-     @param databaseEndpoint {@link #databaseEndpoint}
      */
     public static MysqlDatabaseBuilder builder(String nodeName,
-                                               String databaseName,
-                                               DatabaseEndpointCapability databaseEndpoint) {
+                                               String databaseName) {
         return (MysqlDatabaseBuilder) new MysqlDatabaseBuilder()
             .nodeName(nodeName)
-            .databaseName(databaseName)
-            .databaseEndpoint(databaseEndpoint);
+            .databaseName(databaseName);
     }
 
     @Override

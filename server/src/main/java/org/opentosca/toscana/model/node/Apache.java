@@ -35,19 +35,10 @@ public class Apache extends WebServer {
 
     /**
      @param nodeName      {@link #nodeName}
-     @param containerHost {@link #containerHost}
-     @param dataEndpoint  {@link #dataEndpoint}
-     @param adminEndpoint {@link #adminEndpoint}
      */
-    public static ApacheBuilder builder(String nodeName,
-                                        ContainerCapability containerHost,
-                                        EndpointCapability dataEndpoint,
-                                        AdminEndpointCapability adminEndpoint) {
-        return (ApacheBuilder) new ApacheBuilder()
-            .nodeName(nodeName)
-            .containerHost(containerHost)
-            .dataEndpoint(dataEndpoint)
-            .adminEndpoint(adminEndpoint);
+    public static ApacheBuilder builder(String nodeName){
+        return new ApacheBuilder()
+            .nodeName(nodeName);
     }
 
     @Override

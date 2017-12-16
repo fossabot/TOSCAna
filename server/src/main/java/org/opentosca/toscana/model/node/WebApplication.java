@@ -41,7 +41,7 @@ public class WebApplication extends RootNode {
                              String description) {
         super(nodeName, standardLifecycle, description);
         this.contextRoot = contextRoot;
-        this.appEndpoint = Objects.requireNonNull(endpoint);
+        this.appEndpoint = EndpointCapability.getFallback(endpoint);
         this.host = (host == null) ? WebServerRequirement.builder().build() : host;
 
         capabilities.add(this.appEndpoint);
@@ -50,13 +50,10 @@ public class WebApplication extends RootNode {
 
     /**
      @param nodeName {@link #nodeName}
-     @param endpoint {@link #appEndpoint}
      */
-    public static WebApplicationBuilder builder(String nodeName,
-                                                EndpointCapability endpoint) {
+    public static WebApplicationBuilder builder(String nodeName) {
         return new WebApplicationBuilder()
-            .nodeName(nodeName)
-            .endpoint(endpoint);
+            .nodeName(nodeName);
     }
 
     /**

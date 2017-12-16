@@ -26,7 +26,8 @@ public class Database extends RootNode {
     /**
      The logical database databaseName.
      (TOSCA Simple Profile in YAML Version 1.1, p. 173)
-     */ private final String databaseName;
+     */
+    private final String databaseName;
 
     /**
      The optional port the database service will use for incoming data and request.
@@ -84,23 +85,20 @@ public class Database extends RootNode {
         this.user = user;
         this.password = password;
         this.host = null;
-        this.databaseEndpoint = Objects.requireNonNull(databaseEndpoint);
+        this.databaseEndpoint = DatabaseEndpointCapability.getFallback(databaseEndpoint);
 
         capabilities.add(this.databaseEndpoint);
     }
 
     /**
-     @param nodeName         {@link #nodeName}
-     @param databaseName     {@link #databaseName}
-     @param databaseEndpoint {@link #databaseEndpoint}
+     @param nodeName     {@link #nodeName}
+     @param databaseName {@link #databaseName}
      */
     public static DatabaseBuilder builder(String nodeName,
-                                          String databaseName,
-                                          DatabaseEndpointCapability databaseEndpoint) {
+                                          String databaseName) {
         return new DatabaseBuilder()
             .nodeName(nodeName)
-            .databaseName(databaseName)
-            .databaseEndpoint(databaseEndpoint);
+            .databaseName(databaseName);
     }
 
     /**

@@ -22,6 +22,10 @@ public class BlockStorageRequirement extends Requirement<AttachmentCapability, B
         super(capability, occurrence, fulfillers, relationship);
     }
 
+    public static Requirement<AttachmentCapability, BlockStorage, AttachesTo> getFallback(Requirement<AttachmentCapability, BlockStorage, AttachesTo> storage) {
+        return (storage == null) ? BlockStorageRequirement.builder(AttachesTo.builder("/").build()).build() : storage;
+    }
+
     public static BlockStorageRequirementBuilder builder(AttachesTo relationship) {
         return new BlockStorageRequirementBuilder()
             .relationship(relationship);

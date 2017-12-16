@@ -41,26 +41,8 @@ public class AdminEndpointCapability extends EndpointCapability {
             supportedPorts, ipAddress, validSourceTypes, occurence, description);
     }
 
-    /**
-     @param ipAddress {@link #ipAddress}
-     @param port      {@link #port}
-     */
-    public static AdminEndpointCapabilityBuilder builder(String ipAddress,
-                                                         Port port) {
-        return new AdminEndpointCapabilityBuilder()
-            .ipAddress(ipAddress)
-            .port(port);
-    }
-
-    /**
-     @param ipAddress     {@link #ipAddress}
-     @param supportedPort {@link #supportedPorts}
-     */
-    public static AdminEndpointCapabilityBuilder builder(String ipAddress,
-                                                         PortSpec supportedPort) {
-        return new AdminEndpointCapabilityBuilder()
-            .ipAddress(ipAddress)
-            .supportedPort(supportedPort);
+    public static AdminEndpointCapability getFallback(AdminEndpointCapability endpoint) {
+        return (endpoint == null) ? AdminEndpointCapability.builder().build() : endpoint;
     }
 
     @Override

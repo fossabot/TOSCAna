@@ -37,27 +37,9 @@ public class DatabaseEndpointCapability extends EndpointCapability {
         super(protocol, port, secure, urlPath, portName, networkName, initiator,
             supportedPorts, ipAddress, validSourceTypes, occurence, description);
     }
-
-    /**
-     @param ipAddress {@link #ipAddress}
-     @param port      {@link #port}
-     */
-    public static DatabaseEndpointCapabilityBuilder builder(String ipAddress,
-                                                            Port port) {
-        return new DatabaseEndpointCapabilityBuilder()
-            .ipAddress(ipAddress)
-            .port(port);
-    }
-
-    /**
-     @param ipAddress     {@link #ipAddress}
-     @param supportedPort {@link #supportedPorts}
-     */
-    public static DatabaseEndpointCapabilityBuilder builder(String ipAddress,
-                                                            PortSpec supportedPort) {
-        return new DatabaseEndpointCapabilityBuilder()
-            .ipAddress(ipAddress)
-            .supportedPort(supportedPort);
+    
+    public static DatabaseEndpointCapability getFallback(DatabaseEndpointCapability endpoint){
+        return (endpoint == null) ? DatabaseEndpointCapability.builder().build() : endpoint;
     }
 
     @Override

@@ -1,6 +1,5 @@
 package org.opentosca.toscana.core.parse.converter.visitor.node;
 
-import org.opentosca.toscana.core.parse.converter.visitor.ConversionResult;
 import org.opentosca.toscana.core.parse.converter.visitor.NodeContext;
 import org.opentosca.toscana.model.node.WordPress;
 import org.opentosca.toscana.model.node.WordPress.WordPressBuilder;
@@ -10,23 +9,32 @@ import org.eclipse.winery.model.tosca.yaml.TPropertyAssignment;
 import org.eclipse.winery.model.tosca.yaml.TRequirementAssignment;
 
 public class WordPressVisitor<NodeT extends WordPress, BuilderT extends WordPressBuilder> extends WebApplicationVisitor<NodeT, BuilderT> {
-    
+
+    private final static String ADMIN_USER_PROPERTY = "admin_user";
+    private final static String ADMIN_PASSWORD_PROPERTY = "admin_password";
+    private final static String DB_HOST_PROPERTY = "db_host";
     private final static String HOST_REQUIREMENT = "host";
 
     @Override
-    public ConversionResult<NodeT> visit(TPropertyAssignment node, NodeContext<BuilderT> parameter) {
-        BuilderT builder = parameter.getNodeBuilder();
-        Object value = node.getValue();
+    protected void handleProperty(TPropertyAssignment node, NodeContext<BuilderT> parameter, BuilderT builder, Object value) {
         switch (parameter.getKey()) {
+            case ADMIN_USER_PROPERTY:
+                builder.adminUser((String) value);
+                break;
+            case ADMIN_PASSWORD_PROPERTY:
+                builder.adminPassword((String) value);
+                break;
+            case DB_HOST_PROPERTY:
+                builder.dbHost((String) value);
+                break;
             default:
-                super.visit(node, parameter);
+                super.handleProperty(node, parameter, builder, value);
         }
-        return null;
     }
 
     @Override
     protected void handleRequirement(TRequirementAssignment requirement, NodeContext<BuilderT> context, BuilderT builder) {
-        switch (context.getKey()){
+        switch (context.getKey()) {
             case HOST_REQUIREMENT:
                 builder.databaseEndpoint(provideRequirement(requirement, context, ConnectsTo.class));
                 break;

@@ -4,11 +4,9 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.opentosca.toscana.model.EffectiveModel;
-import org.opentosca.toscana.model.capability.AdminEndpointCapability;
 import org.opentosca.toscana.model.capability.ContainerCapability;
 import org.opentosca.toscana.model.capability.DockerContainerCapability;
 import org.opentosca.toscana.model.capability.OsCapability;
-import org.opentosca.toscana.model.datatype.Port;
 import org.opentosca.toscana.model.node.Compute;
 import org.opentosca.toscana.model.node.ContainerRuntime;
 import org.opentosca.toscana.model.node.DockerApplication;
@@ -31,20 +29,12 @@ public class TestEffectiveModels {
             .validSourceTypes(validSourceTypes)
             .build();
 
-        AdminEndpointCapability computeAdminEndpointCap = AdminEndpointCapability
-            .builder("127.0.0.1", new Port(80))
-            .build();
-        AttachesTo attachesTo = AttachesTo
-            .builder("mount")
-            .build();
-        BlockStorageRequirement blockStorageRequirement = BlockStorageRequirement
-            .builder(attachesTo)
-            .build();
         OsCapability os = OsCapability.builder()
             .type(OsCapability.Type.WINDOWS)
             .build();
         Compute computeNode = Compute
-            .builder("server", os, computeAdminEndpointCap, blockStorageRequirement)
+            .builder("server")
+            .os(os)
             .host(host)
             .build();
         return new EffectiveModel(Sets.newHashSet(computeNode));
