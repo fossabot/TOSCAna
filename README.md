@@ -2,6 +2,7 @@
 
 [![Build Status](https://travis-ci.org/StuPro-TOSCAna/TOSCAna.svg?branch=ci)](https://travis-ci.org/StuPro-TOSCAna/TOSCAna)
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/d002dc08115145e6992ba64aa494893e)](https://www.codacy.com/app/stupro-toscana/TOSCAna?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=StuPro-TOSCAna/TOSCAna&amp;utm_campaign=Badge_Grade) [![codecov](https://codecov.io/gh/StuPro-TOSCAna/TOSCAna/branch/master/graph/badge.svg)](https://codecov.io/gh/StuPro-TOSCAna/TOSCAna)
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fc-mueller%2FTOSCAna.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2Fc-mueller%2FTOSCAna?ref=badge_shield)
 ## Introduction
 The TOSCAna framework allows the transformation of TOSCA models into other cloud formats.
 Currently, it aims to support multiple cloud ecosystems, with Kubernetes, CloudFoundry, AWS CloudFormation being the first.
@@ -23,3 +24,6 @@ Tools that are used in this project.
 - Code coverage: [Codecov](https://codecov.io/gh/StuPro-TOSCAna/TOSCAna), [Get browser extension](https://github.com/codecov/browser-extension)
 ## License
 TOSCAna is licenced under the [Apache License 2.0](LICENSE).
+
+
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fc-mueller%2FTOSCAna.svg?type=large)](https://app.fossa.io/projects/git%2Bgithub.com%2Fc-mueller%2FTOSCAna?ref=badge_large)
